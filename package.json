@@ -1,7 +1,7 @@
 {
   "name": "projct",
   "version": "1.0.0",
-  "description": "Server per la consegna di file",
+  "description": "WebApp per gestire la somministrazione di verifiche/test in locale",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

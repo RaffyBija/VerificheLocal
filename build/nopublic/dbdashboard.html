@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style2.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="common_script.js"></script>
+    <title>Dashboard Admin</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin-top: 5px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: center;
+            width: fit-content;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #46a1ec56;
+        }
+
+        table tr:hover {
+            background-color: #88878786;
+        }
+
+        table th {
+            background-color: #1e7cc9a8;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Gestione Database</h1>
+        <div id="user-info">
+            <span>Benvenuto</span>
+            <span id="username"></span>
+            <a href="/logout">
+                <img src="/img/logout-icon.png" alt="logout" id="logout-icon">
+            </a>
+        </div>
+    </header>
+    <div id="main-container">
+        <button id="toggle-btn">☰</button>
+        <nav id="navbar">
+            <ul>
+                <li><a href="/view">File Menager</a></li>
+                <li><a href="/upload">File Transfer</a></li>
+                <li><a href="/verificastudente">Verifica in Corso</a></li>
+                <li><a href="/docdashboard">Configura Verifica</a></li>
+                <li><a href="/sessions">Sessions Debugger</a></li>
+                <li><a href="/api/debug-session">Current Session Debugger</a></li>
+            </ul>
+        </nav>
+        <main id="main-content">
+            <div id="action-box">
+                <label for="classe-select">Filtra:</label>
+                <select name="filterSelect" id="classe-select">
+                    <!-- Le opzioni verranno generate dinamicamente -->
+
+                </select>
+                <button id="refresh-btn" class="refresh-btn">⟳</button>
+                <label for="hide-offline" style="width: fit-content;">
+                    <input type="checkbox" id="hide-offline" name="hide-offline" >
+                    Nascondi utenti offline
+                </label>
+            </div>
+            <div id="table-container">
+                <table id="data-table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>ID</th>
+                            <th>Cognome</th>
+                            <th>Nome</th>
+                            <th>Classe</th>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Le righe verranno generate dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    <div id="edit-popup">
+        <h3>Modifica Record</h3>
+        <form id="edit-form">
+            <input type="hidden" id="edit-id">
+            <label for="edit-cognome">Cognome:</label>
+            <input type="text" id="edit-cognome" required>
+            <br><br>
+            <label for="edit-nome">Nome:</label>
+            <input type="text" id="edit-nome" required>
+            <br><br>
+            <label for="edit-classe">Classe:</label>
+            <input type="text" id="edit-classe" required>
+            <br><br>
+            <label for="edit-username">Username:</label>
+            <input type="text" id="edit-username" required>
+            <br><br>
+            <label for="edit-password">Password:</label>
+            <input type="password" id="edit-password" required>
+            <br><br>
+            <button type="submit">Salva</button>
+            <button type="button" id="close-popup">Annulla</button>
+        </form>
+    </div>
+    <div id="overlay"></div>
+
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <script src="dashboard_script_jQ.js"></script>
+</body>
+
+</html>

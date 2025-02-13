@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+  <link rel="stylesheet" href="./style2.css">
+</head>
+<body>
+    <main id="main-container" class="center-box">
+        <form id="loginForm" method="post" action="/login">
+            <a href="/"><img src="./img/back.png" alt="Torna Indietro" id="coBack"></a> <h2>Login</h2>
+            <input type="text" name="username" placeholder="Username" required><br>
+            <input type="password" name="password" placeholder="Password" required><br>
+            <input type="text" name="classe" placeholder="Classe (es. Classe1A)" required><br>
+            <button type="submit">Accedi</button> 
+        </form>
+    </main>
+    <script>
+       
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            if (response.ok) {
+                alert(result.message); // Mostra un messaggio di successo
+                window.location.href = result.redirectTo; // Reindirizza alla pagina upload
+            } else {
+                alert(result.message); // Mostra un messaggio di errore
+            }
+        });
+    </script>
+</body>
+</html>

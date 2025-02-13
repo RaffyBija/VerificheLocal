@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style2.css">
+    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.1.0/ckeditor5.css" crossorigin>
+    <script src="https://cdn.ckeditor.com/ckeditor5/44.1.0/ckeditor5.umd.js" crossorigin></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/44.1.0/translations/it.umd.js" crossorigin></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <script src="./ckeditor_script.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/docdashboard_Script/main.js" type="text/javascript"></script>
+    <script src="./common_script.js"></script>
+    <title>Dashboard Docente</title>
+    <style>
+        #newTestSection,
+        #newQuizSection,
+        #sendTestForm,
+        #sendQuizForm,
+        #saveNewQuiz,
+        #importNewQuiz,
+        #btnTestEndTools {
+            display: none;
+        }
+
+        #newTestSection {
+            height: 100vh;
+            width: 90%;
+        }
+
+        #newQuizSection {
+            position: relative;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+        }
+
+        #newQuizSection input {
+            width: 40px;
+            padding: 7px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+
+        .select-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+        }
+
+        .select-container label {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .select-container select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        #existingTestSection {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin: 20px 0;
+            h2{
+                margin: 0;
+            }
+        }
+
+        .ck.ck-editor__main>.ck-editor__editable {
+            height: 65vh;
+        }
+
+        .risposta {
+            display: inline-block;
+            margin: 5px;
+            text-align: center;
+        }
+
+        #assessmentDropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        #dropdownMenu {
+            display: none;
+            position: absolute;
+            left: 83px;
+            background-color: rgb(50, 149, 255);
+            border: 1px solid #ccc;
+            z-index: 1;
+            border-radius: 4px;
+        }
+
+        #dropdownMenu button {
+            display: block;
+            width: 100%;
+            border: none;
+            background: none;
+            text-align: left;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        #dropdownMenu button:hover {
+            background-color: #f1f1f1;
+            color: black;
+        }
+        #verifica-incorso{
+            display: none;
+            position: fixed;
+            top: 60px;
+            /* left: -1000px; */
+            text-align: center;
+            padding: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin: 20px 0;
+        }
+        #test-info{
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+        #verifica-incorso #reduce{
+            border: 1px solid black;
+            border-radius: 10%;
+            text-align: center;
+            padding: 3px 5px;
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            cursor: pointer;
+        }
+        .buttonSection{
+            text-align: right;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+        #annullaQ,#importNewQuiz,#saveNewQuiz{
+            display: inline-block;
+        }
+        .stop { background-color: red; color: white; }
+        .start { background-color: green; color: white; }
+    
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Configura Verifica</h1>
+        <div id="user-info">
+            <span>Benvenuto</span>
+            <span id="username"></span>
+            <a href="/logout">
+                <img src="/img/logout-icon.png" alt="logout" id="logout-icon">
+            </a>
+        </div>
+    </header>
+    <main>
+        <div id="verifica-incorso"> 
+            <span id="reduce"><strong>-</strong></span>
+            <h2>Verifica in corso</h2> <div class="spinner" style=" width: 20px; height: 20px; border-color: aqua; border-top-color: transparent; display: inline-block; margin-left: 5px;"></div>
+            <div id="mainInfoContent">
+                <div id="test-info">
+                    <div>
+                        <h3>Classe</h3>
+                        <span id="test-classe"></span>
+                    </div>
+                    <div>
+                        <h3>Nome della Verifica: </h3>    
+                        <span id="test-name"></span>
+                    </div>
+                    <div>
+                        <h3>Tipo Verifica: </h3>
+                        <div id="test-type"></div>
+                    </div>
+                    <div>
+                        <h3>Tempo rimanente: </h3>
+                        <div id="display">0:00</div>
+                    </div>
+                </div>
+                <hr>
+                <div id="live-info"></div>
+                <div class="buttonSection">
+                    <div id="btnTestTools">
+                        <button id="stopBtn" class="stop">Pausa</button>
+                        <button id="startBtn" class="start">Riprendi</button>
+                        <button id="closeTest">Termina Attivitá </button>
+                    </div>
+                    <div id="btnTestEndTools">
+                        <!-- <button id="detailTest">Dettagli</button> -->
+                        <button id="download-results">Scaica Risultati</button>
+                        <button id="newVerifica">Configura una nuova verifica</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="existingTestSection">
+            <div class="select-container">
+                <label for="classe-select"><strong>Imposta classe destinataria: <span style="color: red;">*</span></strong> </label>
+                <select name="filterSelect" id="classeList">
+                    <!-- Le opzioni verranno generate dinamicamente -->
+                </select>
+            </div>
+            <h2>Scegli il tipo di verifica</h2>
+            <div class="buttonSection">
+                <button type="button" id="testBtn">Testuale</button>
+                <button type="button" id="quizBtn">Quiz Vero/Falso</button>
+            </div>
+
+            <form id="sendTestForm">
+                <label for="existingTests">Scegli una verifica esistente:</label>
+                <select id="existingTests" name="existingTests">
+                    <!-- Le opzioni verranno popolate dinamicamente -->
+                </select>
+                <button type="button" id="refresh-tests" class="refresh-btn">⟳</button>
+                <br>
+                <label for="testTitle">Inserisci il titolo della verifica</label>
+                <input type="text" name="testTitle" id="testTitle">
+                <hr>
+                <label for="attachments">Aggiungi allegati:</label>
+                <input type="file" id="attachments" name="attachments" multiple>
+                <ol id="fileList"></ol>
+                <hr>
+                <h3>Timer</h3>
+                <label for="minutesInput">Minuti:</label>
+                <input type="number" id="minutesInput" placeholder="0" min="0" max="60">
+                <label for="secondsInput">Secondi:</label>
+                <input type="number" id="secondsInput" placeholder="0" min="0" max="60">
+                <button type="submit" id="sendTestButton">Invia</button>
+            </form>
+
+            <form id="sendQuizForm">
+                <label for="punti">Punteggi per risposta</label>
+                <hr>
+                <label for="corretta">Corretta</label>
+                <input type="number" name="corretta" id="corretta" value="2">
+
+                <label for="sbagliata">Sbagliata</label>
+                <input type="number" name="sbagliata" id="sbagliata" value="-1">
+
+                <label for="noRisp">Non Risposta</label>
+                <input type="number" name="noRisp" id="noRisp" value="0">
+                <hr>
+                <label for="quizTitle">Inserisci il titolo del quiz</label>
+                <input type="text" name="quizTitle" id="quizTitle">
+                <hr>
+                <label for="existingQuizs">Scegli un Quiz esistente:</label>
+                <br>
+                <select id="existingQuizs" name="existingQuizs">
+                    <!-- Le opzioni verranno popolate dinamicamente -->
+                </select>
+                <button type="button" id="refresh-quizs" class="refresh-btn">⟳</button>
+                <hr>
+                <h3>Timer</h1>
+                    <label for="minutesInput">Minuti:</label>
+                    <input type="number" id="minutesInput" placeholder="0" min="0" max="60">
+                    <label for="secondsInput">Secondi:</label>
+                    <input type="number" id="secondsInput" placeholder="0" min="0" max="60">
+                <br>
+                <button type="submit">Invia</button>
+            </form>
+
+            
+        
+            <div id="assessmentDropdown">
+                <hr>
+                <h2>Crea una nuova verifica</h2><br>
+                <button type="button" id="dropdownButton">Nuova Verifica</button>
+                <div id="dropdownMenu">
+                    <button type="button" id="new-test">Testo</button>
+                    <button type="button" id="new-quiz">Quiz V/F</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="newTestSection">
+            <h2>Configuratore Verifica testuale</h2><br>
+            <div id="editor" contenteditable="true"></div>
+            <button onclick="generatePage()">Salva</button><button type="reset" id="annullaT">Annulla</button>
+        </div>
+
+        <div id="newQuizSection">
+            <h2 style="text-align: center;">Crea o Importa un nuovo Quiz V/F</h2><br>
+            <div id="numQSection">
+                <label for="numQ">Numero domande</label>
+                <input type="number" name="numQ" id="numQ" value="0" min="0">
+                <button type="button" id="genera-editQuiz" style="background-color: transparent;">​​✅​</button>
+                <hr>
+            </div>
+            <div id="elseImport">
+                <label for="importQuiz">Importa un file .csv</label><br>
+                <input type="file" name="importQuiz" id="importQuiz" accept=".csv" style="width: auto;">
+                <hr>
+            </div>
+            <div id="editQuiz">
+                <!-- Genera dinamicamente codice -->
+            </div>
+            <div id="csvPreview">
+                <!-- Genera dinamicamente codice -->
+            </div>
+            <div class="buttonSection">
+                <div id="saveNewQuiz">
+                    
+                    <button onclick="generateQuiz()">Salva</button>
+                </div>
+                <div id="importNewQuiz">
+                    
+                    <button onclick="importQuiz()">Importa</button>
+                </div>
+                <button id="annullaQ">Annulla</button>
+            </div>
+            
+            <div id="loading-overlay" style="display: none;">
+                <div class="spinner"></div>
+            </div>
+        </div>
+
+</body>
+
+</html>

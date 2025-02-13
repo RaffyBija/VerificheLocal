@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/studentdashboard_script.js"></script>
+    <script src="/common_script.js"></script>
+    <link rel="stylesheet" href="style2.css">
+    <title>Dashboard Studente</title>
+    <style>
+        #test-page {
+            width: 80%;
+            height: 100%;
+            border: none;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .sidenav {
+            display: none;
+            height: 100%;
+            width: fit-content;
+            position: fixed;
+            padding: 5px;
+            z-index: 1;
+            top: 57px;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            color: white;
+        }
+
+        #quiz-area {
+            display: none  ;
+            width: 70%;
+            height: 50vh;
+            margin: 0 auto;
+            text-align: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-left: 1px solid #ddd;
+            overflow-y: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .vero{
+            background-color: green;
+        }
+        .falso{
+            background-color: red;
+        }
+
+        #attachments-list {
+            display: none;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #attachments-list li {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+            cursor: pointer;
+        }
+
+        #attachments-list li:hover {
+            background-color: #e0e0e0;
+            transform: scale(1.05);
+        }
+
+        #attachments-list li:active {
+            background-color: #d0d0d0;
+            transform: scale(1);
+        }
+        #container {
+            display: flex;
+            margin-top: 57px; /* height of the header */
+        }
+
+        #main-content {
+            margin-left: 200px; /* width of the sidenav */
+            flex-grow: 1;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div id="user-info">
+            <h1>
+                <span>Benvenuto</span>
+                <span id="username"></span>
+                <a href="/logout">
+                    <img src="/img/logout-icon.png" alt="logout" id="logout-icon">
+                </a>
+            </h1>
+        </div>
+    </header>
+        <div id="container">
+
+            <div class="sidenav">
+                <h3>Tempo rimanente</h3>
+                <div id="display">0:00</div>
+                <button onclick="goToUpload()" id="sendFile" style="display: none;">Invia Prova</button>
+                <h3>Allegati</h3>
+                <ul id="attachments-list">
+                    <!-- Gli allegati inviati saranno elencati qui -->
+                </ul>
+            </div>
+            <div id="main-content">
+                <iframe id="test-page" src=""></iframe>
+                <div id="quiz-area">
+                    <!--- -->
+                </div>
+            </div>
+        </div>
+            
+    <div id="overlay">
+        <div id="loading-popup">
+            <p>La prova non è ancora iniziata</p>
+            <p>Attendere...</p>
+            <img src="/loading.gif" alt="loading">
+        </div>
+    </div>
+</body>
+
+</html>

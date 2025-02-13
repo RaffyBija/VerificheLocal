@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <title>Simulazione Estrazione Tombola</title>
+        <meta charset="utf-8">
+        <style type="text/css">
+            * {
+                font-family: 'comic sans ms';
+            }
+            body {
+                text-align: center;
+                margin: 0;
+            }
+            body::after {
+                /* metodo che opacizza il body, riscrivendovi sopra */
+                background-image: url('tombola-1.jpg');
+                background-size: cover;
+                content: "";
+                opacity: 0.5;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                position: absolute;
+                z-index: -1;
+            }
+            table {
+                margin: 40px auto;
+            }
+            td {
+                text-align: center;
+                width: 50px;
+                height: 36px;
+                border: 1pt solid black;
+                background-color: white;
+            }
+            h1 {
+                cursor: pointer;
+            }
+            .estratto {
+                color: white;
+                background-color: black;
+                font-weight: bold;
+            }
+            div#h1 {
+                width: 300px;
+                background-color: white;
+                border: 1pt solid blue;
+                border-radius: 5px;
+                margin: 0 auto;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>TOMBOLA BUS</h1>
+
+        <div id="tabella">
+            <!-- La tabella generata con for nello script -->
+        </div>
+        <div id="h1">Clicca qui per estrarre un numero</div>
+        <h2>Clicca sui numeri della tabella per controllarne l'avvenuta estrazione</h2>
+
+        <script>
+ ///////////// 1) dinamicamente con js e jq crea tabella coi numeri 
+
+            // Costruzione tabella
+            let tab = "<table>";
+            for (let num = 1; num<=90; num++) {
+                //creo una nuova riga ogni 10 numeri
+                if ((num - 1) % 10 === 0) {
+                    tab += "<tr>";
+                }
+
+                // creazione di una cella
+                tab += '<td  style=" background-color: red" id="c' + num + '">' + num + '</td>';
+
+                // finisce riga dopo 10 numeri e chiudo tag
+                if (num % 10 === 0) {
+                    tab += "</tr>";
+                }
+            }
+            // chiudo tag tabella
+            tab += "</table>";
+
+            // Inserimento tabella nella div 'tabella'
+            $('#tabella').html(tab);
+
+
+////////////// 2) Cliccando sul div (o button) in fondo, si estrarrà un numero tra 1 e 90, 
+            //    facendo attenzione a non riproporre più volte lo stesso numero.
+
+            var vet = [];
+
+            $('#h1').click(function() {
+                // numero estratto 
+                let estratto;
+                do {
+                    // math.floor = arrotonda verso il basso
+                    estratto = Math.floor(Math.random() * 90) + 1;
+
+                // controllo che il numero estratto non sia già incluso nel vettore
+                } while (vet.includes(estratto)); 
+
+                // aggiungo num estratto al vet
+                vet.push(estratto);
+
+////////////// 3) Verrà visualizzata una alert col nuovo numero estratto
+                alert('numero estratto: ' + estratto);
+                // lo metto nella classe "estratto" e viene colorato di nero x attributo della classe)
+                $('#c' + estratto).addClass('estratto');
+                
+////////////// 5) Una volta esauriti tutti i numeri si visualizzerà una alert con un avvertimento.    
+                if (vet.length === 90) {
+                    alert("NUMERI ESAURITI!!");
+                    return;
+                }
+            });
+
+//////////// 6) Potresti infine far in modo che se l’utente clicca su un qualsiasi numero, 
+//              lo avvisi con una alert se quel numero è giaà stato estratto oppure no.
+            $('td').click(function() {
+                // con substring tolgo 'c' e rimane solo il numero della cella
+                const cella = $(this).attr('id').substring(1);
+                
+                // verifico che il numero sia presente nel vet
+                // .includes() lavora con int
+                // uso parseInt per trasformare string to int
+                if (vet.includes(parseInt(cella))) {
+                    alert('il numero ' + cella + ' è già stato estratto');
+                } else {
+                    alert('il numero ' + cella + ' non è ancora stato estratto');
+                }
+            });
+
+            
+        </script>
+    </body>
+</html>

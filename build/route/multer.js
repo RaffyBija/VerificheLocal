@@ -121,6 +121,9 @@ const attachmentsStorage = multer.diskStorage({
         if (!fs.existsSync(baseDir)) {
             fs.mkdirSync(baseDir, { recursive: true });
         }
+        console.log("Attachement dir: ",baseDir);
+        router.use("/",express.static(baseDir));
+
         cb(null, baseDir);
     },
     filename:(req,file,cb)=>{
@@ -137,7 +140,6 @@ const csvStorage = multer.diskStorage({
         if (!fs.existsSync(baseDir)) {
             return cb(new Error("Errore nel server"));
         }
-
         cb(null, baseDir);
     },
 
@@ -155,6 +157,7 @@ const csvStorage = multer.diskStorage({
             filePath = path.join(baseDir, fileName);
             counter++;
         }
+        
         cb(null, fileName);
     }
 });
@@ -167,18 +170,24 @@ const uploadAtta = multer ({storage: attachmentsStorage});
 // Funzione per ottenere la lista delle cartelle e dei file
 const getDirectoryStructure = (dirPath) => {
     const result = [];
-    const items = fs.readdirSync(dirPath);
+    const fullPath = path.join(__dirname,'../../'+dirPath);
+    try {
+        const items = fs.readdirSync(fullPath);
 
-    items.forEach(item => {
-        const fullPath = path.join(dirPath, item);
-        const stats = fs.statSync(fullPath);
+        items.forEach(item => {
+            
+            const stats = fs.statSync(fullPath);
 
-        if (stats.isDirectory()) {
-            result.push({ type: 'directory', name: item, path: fullPath });
-        } else {
-            result.push({ type: 'file', name: item, path: fullPath });
-        }
-    });
+            if (stats.isDirectory()) {
+                result.push({ type: 'directory', name: item, path: dirPath });
+            } else {
+                result.push({ type: 'file', name: item, path: `${dirPath}/${item}` });
+            }
+        });
+    } catch (err) {
+        console.error('Errore durante la lettura della directory:', err);
+        return [];
+    }
     return result;
 };
 
@@ -265,13 +274,14 @@ router.get('/api/list-attachments', common.checkAuth, (req, res) => {
     const today = new Date();
     const dateString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
     const testTitle = getVerifica();
-    const baseDir = path.join(__dirname, '../../verifiche', `tempAttachements_${dateString}_${testTitle}_${req.session.classe}`);
-
+    const relativDir = `/verifiche/tempAttachements_${dateString}_${testTitle}_${req.session.classe}`
+    const baseDir = path.join(__dirname,'../../'+relativDir);
+    console.log("list attachements dir: ",baseDir);
     if (!fs.existsSync(baseDir)) {
         return res.status(404).json({ message: 'No attachments found' });
     }
 
-    const attachments = getDirectoryStructure(baseDir);
+    const attachments = getDirectoryStructure(relativDir);
     res.status(200).json(attachments);
 });
 

@@ -13,10 +13,10 @@
     <title>Dashboard Studente</title>
     <style>
         #test-page {
-            width: 80%;
-            height: 100vh;
+            height: 100vh;        /* Viewport-relative units */
+            width: 100%;
             border: none;
-            overflow: visible;
+            display: block;
         }
 
         button {
@@ -38,7 +38,6 @@
             display: none;
             height: 100%;
             width: fit-content;
-            position: fixed;
             padding: 5px;
             z-index: 1;
             top: 57px;
@@ -74,7 +73,7 @@
             margin: 0;
         }
 
-        #attachments-list li {
+        #attachments-list a {
             background-color: #d0d0d01c;
             padding: 10px;
             margin: 5px 0;
@@ -83,12 +82,12 @@
             cursor: pointer;
         }
 
-        #attachments-list li:hover {
+        #attachments-list a:hover {
             background-color: #e0e0e0;
             transform: scale(1.05);
         }
 
-        #attachments-list li:active {
+        #attachments-list a:active {
             background-color: #d0d0d0;
             transform: scale(1);
         }
@@ -97,15 +96,16 @@
             color: rgb(76, 168, 221);
         }
         #container {
-            display: flex;
+
+            display: grid;
+            grid-template-columns: auto 1fr;
         }
 
         #main-content {
-            overflow: visible;
-            margin-left: 200px; /* width of the sidenav */
-            flex-grow: 1;
-            padding: 20px;
+            height: 100%;
+            width: 100%;
         }
+
     </style>
 </head>
 

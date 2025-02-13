@@ -34,7 +34,7 @@ function sendResult (){
 function addAttachment(filename, url) {
     const listItem = document.createElement('li');
     const link = document.createElement('a');
-    link.href = url;
+    link.href = `${url}/${filename}`;
     link.textContent = filename;
     link.download = filename;
     listItem.appendChild(link);

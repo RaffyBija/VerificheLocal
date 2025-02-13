@@ -100,8 +100,6 @@ module.exports = (io,sessionMiddleware) => {
             }
     }
 
-    giveTest();
-
         socket.on("sendTest", (data, info) => {
             try {
                 // Ripristinare lo stato quizCompleted all'invio di un nuovo Test

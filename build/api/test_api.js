@@ -125,7 +125,7 @@ router.post('/test/send', (req, res) => {
                 quizData: verifica.quizData.map(quiz => {
                     return { index: quiz.index, question: quiz.question };
                 }),
-                quizInfo: { type: verifica.type, title: verifica.title }
+                quizInfo: { type: verifica.type, title: verifica.title, classeDestinataria: verifica.classeDestinataria }
             });
         });
         

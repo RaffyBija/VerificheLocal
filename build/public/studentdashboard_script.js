@@ -49,6 +49,7 @@ function fetchAttachments() {
         success: function(data) {
             console.log(data);
             data.forEach(function(attachment) {
+                $('#attachments-list').show();
                 addAttachment(attachment.name, attachment.path);
             });
         },
@@ -71,6 +72,8 @@ $(document).ready(() => {
         socket.emit("enterInSession");
     });
 
+    socket.emit("enterInSession");
+    
 
     socket.on("updateTimer", (time) => {
         document.getElementById("display").innerText = formatTime(time);
@@ -98,7 +101,7 @@ $(document).ready(() => {
             typeTesto = true; // Controllo se il server ha mandato un URL di un file HTML
             $('#overlay,#loading-popup').hide();  // Nasconde il caricamento
             $('#quiz-area').hide();  // Nasconde il quiz
-            $('.sidenav ,#sendFile, #test-page, #attachments-list').show();  // Mostra il pulsante per inviare il file
+            $('.sidenav ,#sendFile, #test-page').show();  // Mostra il pulsante per inviare il file
             
             $('#test-page').attr('src', data.testUrl);  // Imposta l'URL del file HTML
         } else if (Array.isArray(data) && data.length > 0) { // Controllo se il server ha mandato un array di oggetti del quiz

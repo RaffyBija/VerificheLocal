@@ -109,6 +109,7 @@ router.post('/test/send', (req, res) => {
         
             // Creiamo l'array quizData
             verifica.quizData = parsed.data.map(row => {
+                verifica.punteggi.totale += verifica.punteggi.corretta;
                 if (row.length < 3) return null; // Evita errori con righe incomplete
         
                 return {

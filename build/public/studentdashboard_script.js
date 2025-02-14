@@ -47,13 +47,16 @@ function fetchAttachments() {
         url: '/api/list-attachments',
         method: 'GET',
         success: function(data) {
-            console.log(data);
-            data.forEach(function(attachment) {
-                $('#attachments-list').show();
-                addAttachment(attachment.name, attachment.path);
-            });
+            if(data){
+                console.log(data);
+                $('#allegati').show();
+                data.forEach(function(attachment) {
+                    addAttachment(attachment.name, attachment.path);
+                });
+            }
         },
         error: function(error) {
+            $('#allegati').hide();
             console.error('Errore nel recupero degli allegati:', error);
         }
     });
@@ -81,7 +84,7 @@ $(document).ready(() => {
     
     socket.on("timerFinished", () => {
         $('#overlay #loading-popup').html("Tempo scaduto!");
-        $('.sidenav ,#sendFile, #test-page, #attachments-list').hide();
+        $('.sidenav ,#sendFile, #test-page, #allegati').hide();
         //Controllo se sono state risposte tutte le domande altrimenti completo con una stringa vuota
         quizData.forEach((question) => {
             if (!question.answer) {
@@ -95,7 +98,8 @@ $(document).ready(() => {
 
     //Chiamata socket per ottenere i dati del quiz
     socket.on("testReceived", (data,info) => {
-        console.log("Ricevuto URL del quiz:", data);
+        //console.log("Ricevuto URL del quiz:", data);
+        //console.log("TEST INFO: ",info);
         if (data.testUrl) { 
             fetchAttachments();
             typeTesto = true; // Controllo se il server ha mandato un URL di un file HTML
@@ -106,13 +110,13 @@ $(document).ready(() => {
             $('#test-page').attr('src', data.testUrl);  // Imposta l'URL del file HTML
         } else if (Array.isArray(data) && data.length > 0) { // Controllo se il server ha mandato un array di oggetti del quiz
             $('#overlay,#loading-popup').hide();  // Nasconde il caricamento
-            $('#quiz-area').html(`<h1>${title}</h1><hr> <div id="quiz-test"></div>`);  // Aggiunge il titolo del quiz
-            $('#test-page, #sendFile,#attachments-list').hide();  // Nasconde il pulsante per inviare il file
+            $('#quiz-area').html(`<h1>${info}</h1><hr> <div id="quiz-test"></div>`);  // Aggiunge il titolo del quiz
+            $('#test-page, #sendFile,#allegati').hide();  // Nasconde il pulsante per inviare il file
             $('.sidenav ,#quiz-area').show();  // Mostra il quiz
             processQuizData(data);  // Processa i dati del quiz
         } else {
             $('#overlay,#loading-popup').show();  // Nasconde il caricamento
-            $('.sidenav ,#sendFile, #test-page, #attachments-list').hide();
+            $('.sidenav ,#sendFile, #test-page, #allegati, #quiz-area').hide();
             console.error("URL non valido o file non supportato.");
         }
     });

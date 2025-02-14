@@ -67,10 +67,12 @@
         }
 
         #attachments-list {
-            display: none;
             list-style-type: none;
             padding: 0;
             margin: 0;
+        }
+        #attachments-list li{
+            padding: 10px ;
         }
 
         #attachments-list a {
@@ -96,12 +98,15 @@
             color: rgb(76, 168, 221);
         }
         #container {
-
+            height: 100%;
             display: grid;
             grid-template-columns: auto 1fr;
         }
 
         #main-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             height: 100%;
             width: 100%;
         }
@@ -127,10 +132,12 @@
                 <h3>Tempo rimanente</h3>
                 <div id="display">0:00</div>
                 <button onclick="goToUpload()" id="sendFile" style="display: none;">Invia Prova</button>
-                <h3>Allegati</h3>
-                <ul id="attachments-list">
-                    <!-- Gli allegati inviati saranno elencati qui -->
-                </ul>
+                <div id="allegati">    
+                    <h3>Allegati</h3>
+                    <ul id="attachments-list">
+                        <!-- Gli allegati inviati saranno elencati qui -->
+                    </ul>
+                </div>
             </div>
             <div id="main-content">
                 <iframe id="test-page" src=""></iframe>

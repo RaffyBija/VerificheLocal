@@ -263,7 +263,7 @@ router.post('/delete-tempdir',(req,res)=>{
         const tempDir = path.join(__dirname, '../../verifiche', `${dirPrefix}${dateString}_${testName}_${classe}`);
 
         if (fs.existsSync(tempDir)) {
-            fs.rmdirSync(tempDir, { recursive: true });
+            fs.rmSync(tempDir, { recursive: true, force: true });
             res.status(200).json({ message: 'Cartella temporanea rimossa con successo' });
         } else {
             res.status(404).json({ message: 'Cartella temporanea non trovata' });

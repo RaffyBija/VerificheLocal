@@ -34,7 +34,19 @@ function initializeEditor() {
 function closeTestSession() {
     const confirmClose = confirm("Sei sicuro di voler terminare l'attività in corso?");
     if (!confirmClose) return;
+
     socket.emit('closeSession');
+
+    $.ajax({
+        url: `/delete-tempdir?classe=${$('#test-classe').text()}&title=${$('#test-name').text()}`,
+        type: "POST",
+        success: (data)=>{
+            console.log(data.message);
+        },
+        error: (xhr,status,error)=>{
+            console.error("Errore nella cancellazione della cartella temporanea",error);
+        }
+    })
     testEnded();
 }
 

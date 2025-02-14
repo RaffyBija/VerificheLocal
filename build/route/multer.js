@@ -121,8 +121,7 @@ const attachmentsStorage = multer.diskStorage({
         if (!fs.existsSync(baseDir)) {
             fs.mkdirSync(baseDir, { recursive: true });
         }
-        console.log("Attachement dir: ",baseDir);
-        router.use("/",express.static(baseDir));
+        //router.use("/",express.static(baseDir));
 
         cb(null, baseDir);
     },
@@ -253,6 +252,28 @@ router.post('/api/import-attachments', common.checkAuth, uploadAtta.array('attac
     }
 });
 
+//Route per pulire i le cartelle temporanee degli allegati
+router.post('/delete-tempdir',(req,res)=>{
+    try {
+        const today = new Date();
+        const dateString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+        const testName = req.query.title;
+        const classe = req.query.classe;
+        const dirPrefix = "tempAttachements_";
+        const tempDir = path.join(__dirname, '../../verifiche', `${dirPrefix}${dateString}_${testName}_${classe}`);
+
+        if (fs.existsSync(tempDir)) {
+            fs.rmdirSync(tempDir, { recursive: true });
+            res.status(200).json({ message: 'Cartella temporanea rimossa con successo' });
+        } else {
+            res.status(404).json({ message: 'Cartella temporanea non trovata' });
+        }
+    } catch (err) {
+        console.error('Errore durante la rimozione della cartella temporanea:', err);
+        res.status(500).json({ message: 'Errore interno del server' });
+    }
+
+});
 
 
 
@@ -276,7 +297,6 @@ router.get('/api/list-attachments', common.checkAuth, (req, res) => {
     const testTitle = getVerifica();
     const relativDir = `/verifiche/tempAttachements_${dateString}_${testTitle}_${req.session.classe}`
     const baseDir = path.join(__dirname,'../../'+relativDir);
-    console.log("list attachements dir: ",baseDir);
     if (!fs.existsSync(baseDir)) {
         return res.status(404).json({ message: 'No attachments found' });
     }
@@ -287,7 +307,6 @@ router.get('/api/list-attachments', common.checkAuth, (req, res) => {
 
 router.get("/test-verifica",(req,res)=>{
     const verifica = getVerifica();
-    console.log("Test debug porcaccio lo zio:",verifica);
     res.status(200).json({verifica});
 });
 

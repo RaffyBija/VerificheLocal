@@ -33,11 +33,14 @@ router.post('/register', async (req, res) => {
         const encryptedPassword = common.encryptPassword(password);
 
         // Salva l'utente
-        await db.saveUser(nome, cognome, username.toLowerCase(), encryptedPassword, classe.toUpperCase());
-        res.status(201).json({ message: 'User registered successfully', redirectTo: '/login' });
+        const formattedNome = nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
+        const formattedCognome = cognome.charAt(0).toUpperCase() + cognome.slice(1).toLowerCase();
+        const formattedClasse = classe.replace(/\s+/g, '').toUpperCase();
+        await db.saveUser(formattedNome, formattedCognome, username.toLowerCase(), encryptedPassword, formattedClasse);
+        res.status(201).json({ message: 'Utente registrato con successo', redirectTo: '/login' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Error registering user: ' + error });
+        res.status(500).json({ message: 'Errore durante la registrazione dell\'utente: ' + error });
     }
 });
 

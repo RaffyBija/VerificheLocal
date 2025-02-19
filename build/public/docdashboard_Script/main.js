@@ -11,7 +11,6 @@ $(document).ready(() => {
             $.getScript("/docdashboard_Script/socket.js", ()=>{
                 console.log("socket.js è stato caricato correttamente.");
                 // Ora che entrambi i file sono caricati, esegui le funzioni dipendenti
-                initializeEditor();
                 setupEventListeners();
                 liveInfo();
                 getClassiList();
@@ -26,11 +25,6 @@ $(document).ready(() => {
     });
 });
 
-function initializeEditor() {
-    ClassicEditor.create(document.querySelector('#editor'), editorConfig)
-        .then(editor => { editorInstance = editor; })
-        .catch(error => { console.error(error); });
-}
 function closeTestSession() {
     const confirmClose = confirm("Sei sicuro di voler terminare l'attività in corso?");
     if (!confirmClose) return;
@@ -106,7 +100,7 @@ function setupEventListeners() {
     $('#sendTestForm').on('submit', async function (event) {
         event.preventDefault();
 
-        const submitButton = $('#sendTestButton'); // Assumendo che il pulsante abbia questo ID
+        const submitButton = $('#sendTestButton');
         submitButton.prop('disabled', true).text('Invio in corso...');
 
         try {

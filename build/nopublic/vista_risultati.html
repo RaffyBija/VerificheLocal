@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="jQuery-3.7.1.min.js"></script>
+    <title>Vista Correzione</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        iframe{
+            width: 100%;
+            height: 100vh;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <iframe src="" frameborder="0" id="pdfViewer"></iframe>
+</body>
+<script>    
+    $(document).ready(function(){
+        $.get('/api/user')
+            .done(function(data){
+                const {username, surname, classe} = data;
+                //$("body").append('<h1>Benvenuto '+username+surname+classe+'</h1>')
+                $.ajax({
+                    url: '/api/reView',
+                    method: 'GET',
+                    data: {username, surname, classe},
+                    xhrFields: {
+                        responseType: 'blob'
+                    },
+                    success: function(data) {
+                        const url = URL.createObjectURL(data);
+                        $("#pdfViewer").attr('src', url).show();
+                    },
+                    error: function() {
+                        alert('Errore');
+                    }
+                });
+              
+            })
+    })
+</script>
+</html>

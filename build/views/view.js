@@ -56,4 +56,9 @@ router.get('/verificastudente', common.checkAuth, (req, res) => {
     res.sendFile(path.join(__dirname, "../nopublic/studentdashboard.html"));
 });
 
+router.get('/getCorrezione', common.checkAuth, (req, res) => {
+    res.sendFile(path.join(__dirname, "../nopublic/vista_risultati.html"));
+}
+);
+
 module.exports = router;

@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 const PDFDocument = require('pdfkit');  //Libreria per generare e gestire un file .pdf

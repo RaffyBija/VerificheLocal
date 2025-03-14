@@ -39,7 +39,11 @@ app.get('/user', common.checkAuth, (req, res) => {
     if (!req.session.user) {
         return res.status(401).send('Utente non autenticato');
     }
-    res.json({ username: req.session.user });
+    res.json({ 
+        username: req.session.user,
+        surname: req.session.userSurname,
+        classe: req.session.classe
+    });
 });
 
 // Endpoint per ottenere Dati Specifici dal database

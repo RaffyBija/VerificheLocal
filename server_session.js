@@ -21,6 +21,9 @@ app.use('/',route);
 const apiTests = require('./build/api/test_api').router; // Importa le route API
 app.use('/api', apiTests); // Utilizza le API delle verifiche
 
+const apiRevisionView = require('./build/api/reviewAPI')
+app.use('/api',apiRevisionView);
+
 const apiDB = require('./build/api/db_api');//Importo le api del database
 app.use('/api',apiDB);
 

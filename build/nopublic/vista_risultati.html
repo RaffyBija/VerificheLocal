@@ -26,7 +26,6 @@
         $.get('/api/user')
             .done(function(data){
                 const {username, surname, classe} = data;
-                //$("body").append('<h1>Benvenuto '+username+surname+classe+'</h1>')
                 $.ajax({
                     url: '/api/reView',
                     method: 'GET',
@@ -39,7 +38,7 @@
                         $("#pdfViewer").attr('src', url).show();
                     },
                     error: function() {
-                        alert('Errore');
+                        alert('Errore nel caricamento del file o file non trovato');
                     }
                 });
               

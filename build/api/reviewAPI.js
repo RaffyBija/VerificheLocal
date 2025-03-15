@@ -7,13 +7,15 @@ const { checkAuth } = require('../midw/common');
 router.get('/reView', checkAuth, (req, res) => {
     const {username, surname, classe} = req.query;
 
+    if(req.session.user !== username && req.session.classe !== classe && req.session.userSurname !== surname){
+        return res.status(403).send('Accesso negato');
+    }
 
-    const sanitizedCognome = surname.replace(/\s+/g, '').toLowerCase();
-    const sanitizedNome = username.replace(/\s+/g, '').substring(0, 1).toUpperCase();
-    const sanitizedClasse = classe.replace(/\s+/g, '');
+    const sanitizedCognome = surname.toLowerCase();
+    const sanitizedNome = username.substring(0, 1).toUpperCase();
     const fileName = `${sanitizedCognome}${sanitizedNome}.pdf`;
     //console.log("File Name: ",fileName);
-    const filePath = path.join(__dirname, `../../storage/correzioni/${sanitizedClasse}`, fileName);
+    const filePath = path.join(__dirname, `../../storage/correzioni/${classe}`, fileName);
     //console.log("File Path: ",filePath);
     if (fs.existsSync(filePath)) {
         res.setHeader('Content-Disposition', `inline; filename=${fileName}`);

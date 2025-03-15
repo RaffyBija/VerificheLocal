@@ -100,8 +100,8 @@ router.get('/logout', (req, res) => {
             return res.status(500).send('Error logging out');
         }
 
-        console.log('Logout effettuato con successo');
-        console.log(sessionManager.getSessions());
+        //console.log('Logout effettuato con successo');
+        //console.log(sessionManager.getSessions());
         // Pulisce il cookie della sessione
         res.clearCookie('connect.sid');
 

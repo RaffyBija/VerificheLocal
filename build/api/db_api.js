@@ -3,10 +3,10 @@ const db = require('../../dbapp2');
 const app = express.Router();
 const common = require('../midw/common');
 const sessionManager = require('../midw/sessionManager');
-const inSessions = sessionManager.getSessions();
 // Endpoint per restituire l'intero Database
 app.get('/data', common.checkAuth, async (req, res) => {
     try {
+        const inSessions = sessionManager.getSessions();
         const users = await db.showUser();
         users.forEach(user => {
             inSessions.forEach(info => {

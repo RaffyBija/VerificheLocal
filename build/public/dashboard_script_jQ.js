@@ -3,15 +3,22 @@ function fetchData() {
     $('#loading-overlay').show(); // Mostra overlay prima della richiesta
     $.get('/api/data')
         .done((data) => {
-                let classi = new Set();
+                let elento_classi = new Set();
                 $("tbody").empty();//Pulisco/Svuoto la tabella
-                data.forEach(row => {
-                    console.log(row.ID," isOnline?",row.isOnline);
-                    classi.add(row.Classe);
 
-                    $('tbody').append(`<tr class="${row.Classe}" data-id="${row.ID}">`);
-                    $(`[data-id="${row.ID}`).append(`
-                     <td><span class="status-icon" data-id="${row.ID}"></span></td>
+                data.forEach(row => {
+                    
+                    elento_classi.add(row.Classe);
+                    
+                    const tr = $(`<tr class="${row.Classe}" data-id="${row.ID}">`)
+                    
+                    const statusClass = row.isOnline ? 'online' : 'offline';
+                    tr.append(`<td><span class="status-icon ${statusClass}" data-id="${row.ID}"></span></td>`);
+
+                    console.log('Status:', row.isOnline);
+                    console.log('statusClass:', statusClass);
+
+                    tr.append(`
                      <td>${row.ID}</td>
                      <td>${row.Cognome}</td>
                      <td>${row.Nome}</td>
@@ -26,11 +33,10 @@ function fetchData() {
                          <button class="delete-btn" data-id="${row.ID}">🗑️ Elimina</button>
                      </td>
 
-                 `).hide(); //Li nascondo come valore di default
+                 `)
+                 .hide(); //Li nascondo come valore di default
 
-                    //Feature per visualizzare se un utente è online 
-                    //Da debuggare
-                    if (row.isOnline) $(`.status-icon[data-id="${row.ID}"]`).toggleClass('online');
+                 $('tbody').append(tr);
                 });
 
                 //Gestione lista per il filter
@@ -39,7 +45,7 @@ function fetchData() {
                         <option value="null" selected></option>
                         <option value="All" >Tutti</option>`);
                 //Inserisco le varie option nella select per filtrare la tabella
-                let setOrdinato = Array.from(classi).sort(); // Ordino il SET generato in modo crescente usando il sort e convertendolo in Array
+                let setOrdinato = Array.from(elento_classi).sort(); // Ordino il SET generato in modo crescente usando il sort e convertendolo in Array
                 setOrdinato.forEach(classe => {
                     $("#classe-select").append(`<option value="${classe}">${classe}`);
                 });
@@ -71,8 +77,8 @@ $("#classe-select").on("change",()=>{
 $("#classe-select").on("change", () => {
     const selectedClass = $("#classe-select option:selected").val();
     const isFleg = $("#hide-offline").is(":checked");
-    $(`tbody>tr`).each((index, row) => {
-        const isOnline = $($((row.firstElementChild).firstElementChild)).hasClass("online");
+    $(`tbody>tr`).each((_, row) => {
+        const isOnline = $(row).find('.status-icon').hasClass("online");
         if(isFleg){
             const isVisible = ((selectedClass === "All" || $(row).hasClass(selectedClass)) && selectedClass !== "null") && (isOnline);
             $(row).toggle(isVisible);
@@ -93,7 +99,7 @@ fetchData();
 // Funzione per aprire il popup
 function openEditPopup(row) {
     $("#overlay , #edit-popup").show();
-    console.log(row);
+    //console.log(row);
     // Precompila i campi con i dati esistenti
     $('#edit-id').val(row[0]);
     $('#edit-cognome').val(row[1]);

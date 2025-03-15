@@ -15,13 +15,10 @@ router.use(session({
     cookie: { secure: false, maxAge: 3600000 } // Configura i cookie (usa secure: true in produzione con HTTPS)
 }));
 
-// Salvo tutte le sessioni in un array per tenerne traccia
-let inSessions = [];
-
 // Route per vedere le sessioni attive
 router.get('/sessions', (req, res) => {
     res.json({ inSessions: sessionManager.getSessions() });
-    console.log("API SESSIONS: ", sessionManager.getSessions());
+    //console.log("API SESSIONS: ", sessionManager.getSessions());
 });
 
 // Endpoint Debug per la session

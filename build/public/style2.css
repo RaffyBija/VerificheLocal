@@ -136,13 +136,14 @@ nav a:hover{
     font-weight: bold;
 }
 #table-container{
+    overflow: scroll;
+    height: 70vh;
     margin: 0 auto;
     width: fit-content;
     background-color: white;
-    padding: 10px;
-    border: 1px solid black;
     border-radius: 10px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px;
 }
 
 #toggle-btn{
@@ -284,6 +285,18 @@ h2{
 .offline{
     background-color: #575757;
 }
+
+footer {
+    background: #333;
+    color: #fff;
+    padding: 10px 0;
+    position: relative;
+    bottom: -50px;
+    width: 100%;
+    text-align: center;
+}
+
+
 @media (max-width: 800px){
     nav ul{
         display: none;

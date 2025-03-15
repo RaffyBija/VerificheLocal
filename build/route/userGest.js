@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const common = require('../midw/common');
+const sessionManager = require('../midw/sessionManager');
 
 const session = require('../midw/session');
 router.use(session.router);
@@ -14,7 +15,6 @@ const db = require('../../dbapp2');
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
-let inSessions = require('../midw/session').inSessions;
 // Route per la registrazione
 router.post('/register', async (req, res) => {
     const { nome, cognome, username, password, classe } = req.body;
@@ -70,8 +70,8 @@ router.post('/login', async (req, res) => {
             req.session.isAuthenticated = true;
             req.session.classe = user.Classe;
 
-            // Salva la sessione in un array
-            session.inSessions.push({ sessionID: req.sessionID, userID: req.session.userID, isAuthenticated: req.session.isAuthenticated });
+            // Salva la sessione in sessionManager
+            sessionManager.addSession(req.sessionID, req.session.userID, req.session.isAuthenticated);
 
             req.session.save(err => {
                 if (err) {
@@ -90,8 +90,8 @@ router.post('/login', async (req, res) => {
 
 // Route per il logout
 router.get('/logout', (req, res) => {
-    // Rimuove l'utente dalla sessione
-    inSessions = inSessions.filter(info => info.userID !== req.session.userID);
+    // Rimuove l'utente dalla sessione in sessionManager
+    sessionManager.removeSession(req.session.userID);
 
     // Distrugge la sessione
     req.session.destroy((err) => {
@@ -100,6 +100,8 @@ router.get('/logout', (req, res) => {
             return res.status(500).send('Error logging out');
         }
 
+        console.log('Logout effettuato con successo');
+        console.log(sessionManager.getSessions());
         // Pulisce il cookie della sessione
         res.clearCookie('connect.sid');
 

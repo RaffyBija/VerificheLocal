@@ -12,9 +12,9 @@ router.get('/reView', checkAuth, (req, res) => {
     const sanitizedNome = username.replace(/\s+/g, '').substring(0, 1).toUpperCase();
     const sanitizedClasse = classe.replace(/\s+/g, '');
     const fileName = `${sanitizedCognome}${sanitizedNome}.pdf`;
-    console.log("File Name: ",fileName);
+    //console.log("File Name: ",fileName);
     const filePath = path.join(__dirname, `../../storage/correzioni/${sanitizedClasse}`, fileName);
-    console.log("File Path: ",filePath);
+    //console.log("File Path: ",filePath);
     if (fs.existsSync(filePath)) {
         res.setHeader('Content-Disposition', `inline; filename=${fileName}`);
         res.setHeader('Content-Type', 'application/pdf');

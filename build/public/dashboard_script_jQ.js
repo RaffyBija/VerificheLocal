@@ -6,6 +6,7 @@ function fetchData() {
                 let classi = new Set();
                 $("tbody").empty();//Pulisco/Svuoto la tabella
                 data.forEach(row => {
+                    console.log(row.ID," isOnline?",row.isOnline);
                     classi.add(row.Classe);
 
                     $('tbody').append(`<tr class="${row.Classe}" data-id="${row.ID}">`);

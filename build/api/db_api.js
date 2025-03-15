@@ -2,8 +2,8 @@ const express = require('express');
 const db = require('../../dbapp2');
 const app = express.Router();
 const common = require('../midw/common');
-let inSessions = require('../midw/session').inSessions;
-
+const sessionManager = require('../midw/sessionManager');
+const inSessions = sessionManager.getSessions();
 // Endpoint per restituire l'intero Database
 app.get('/data', common.checkAuth, async (req, res) => {
     try {
@@ -14,7 +14,6 @@ app.get('/data', common.checkAuth, async (req, res) => {
                     user.isOnline = info.isAuthenticated;
             })
         });
-        const data = [...users, ...inSessions];
         res.status(200).json(users);
     } catch (err) {
         console.log("Errore: ", err);

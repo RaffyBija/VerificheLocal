@@ -78,7 +78,7 @@ router.post('/login', async (req, res) => {
                     console.error('Errore nel salvataggio della sessione: ', err);
                     return res.status(500).send('Errore interno del server');
                 }
-                const role = roles[req.session.classe] || { message: "Accesso Riuscito!", redirectTo: "/verificastudente" };
+                const role = roles[req.session.classe] || { message: "Accesso Riuscito!", redirectTo: "/studentdashboard" };
                 res.json({ success: true, ...role })
             });
         }

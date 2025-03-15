@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studente Dashboard</title>
+    <link rel="stylesheet" href="style2.css">
+    <script src="jQuery-3.7.1.min.js"></script>
+    <style>
+        #user-info {
+            margin: 20px;
+        }
+
+        #user-details {
+            margin: 20px;
+            background-color: #f9f9f9; 
+            padding: 20px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #actions {
+            margin: 20px;
+           
+        }
+
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        footer p {
+            color: #777;
+        }
+
+        #user-details p {
+            margin: 5px;
+        }
+
+        #logout {
+            margin: 0 auto;
+            width: fit-content;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Benvenuto nella tua Dashboard</h1>
+    </header>
+    <main>
+        <section id="user-info">
+            <h2>Le tue informazioni</h2>
+            
+            <div id="user-details" ></div>
+                <!-- User information will be dynamically inserted here -->
+            </div>
+
+            <div id="logout">
+                <a href="/logout" class="button">Logout</a>
+            </div>
+        </section>
+
+        <section id="actions">
+                <a href="/verificastudente" class="button">Accedi alla Verifica</a>
+                <a href="/getCorrezione" class="button" target="_blank">Visualizza Correzioni</a>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Studente Dashboard</p>
+    </footer>
+    <script>
+        $(document).ready(function(){
+            $.get('/api/user')
+                .done(function(data){
+                    const {username, surname, classe} = data;
+                    $("#user-details").append(`<p>Nome: ${username}</p>`);
+                    $("#user-details").append(`<p>Cognome: ${surname}</p>`);
+                    $("#user-details").append(`<p>Classe: ${classe}</p>`);
+                })
+        })
+
+    </script>
+</body>
+</html>

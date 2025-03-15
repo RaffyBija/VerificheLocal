@@ -51,11 +51,18 @@ router.get('/dbdashboard', common.checkAuth, (req, res) => {
     }
 });
 
-// Endpoint per mostrare la Dashboard Studente
+// Endpoint per mostrare la dashboard dello studente
+router.get('/studentdashboard', common.checkAuth, (req, res) => {
+    res.sendFile(path.join(__dirname, "../nopublic/studentedashboard.html"));
+}
+);
+
+// Endpoint per mostrare la Verifica allo Studente
 router.get('/verificastudente', common.checkAuth, (req, res) => {
-    res.sendFile(path.join(__dirname, "../nopublic/studentdashboard.html"));
+    res.sendFile(path.join(__dirname, "../nopublic/studente_verifica.html"));
 });
 
+// Endpoint per mostrare la pagina di correzione
 router.get('/getCorrezione', common.checkAuth, (req, res) => {
     res.sendFile(path.join(__dirname, "../nopublic/vista_risultati.html"));
 }

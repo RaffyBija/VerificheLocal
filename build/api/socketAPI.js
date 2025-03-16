@@ -1,6 +1,6 @@
 const wrap = middleware => (socket, next) => middleware(socket.request, {}, next);
 const { startTimer, stopTimer, resetTimer, restoreTimer, getTimeLeft } = require('./timer');
-const { cacheTest, sessionCache, containsObject, addSession, resetCache } = require('./cache');
+const { getCacheTest, getSessionCache, containsObject, addSession, resetCache } = require('./cache');
 
 module.exports = (io, sessionMiddleware) => {
     io.use(wrap(sessionMiddleware));
@@ -28,6 +28,8 @@ module.exports = (io, sessionMiddleware) => {
         //------ INVIO VERIFICA ----------------
 
         function giveTest() {
+            const sessionCache = getSessionCache();
+            const cacheTest = getCacheTest();
             const foundObj = sessionCache.find(existingObj => parseInt(existingObj.userID) === parseInt(session.userID));
             if (foundObj && !foundObj.quizCompleted) {
                 if (cacheTest.quizInfo.classeDestinataria && session.classe && cacheTest.quizInfo.classeDestinataria === session.classe) {
@@ -40,6 +42,7 @@ module.exports = (io, sessionMiddleware) => {
 
         socket.on("sendTest", (data, info) => {
             try {
+                const sessionCache = getSessionCache();
                 sessionCache.forEach(obj => {
                     delete obj.quizCompleted;
                 });
@@ -48,6 +51,7 @@ module.exports = (io, sessionMiddleware) => {
                     throw new Error("Invalid data or info provided");
                 }
 
+                const cacheTest = getCacheTest();
                 cacheTest.quizData = data;
                 cacheTest.quizInfo = info;
                 cacheTest.quizInfo.started = true;
@@ -60,20 +64,22 @@ module.exports = (io, sessionMiddleware) => {
             }
         });
 
-        socket.emit("testInfo", cacheTest.quizInfo);
-        socket.emit('sendSessionCache', sessionCache);
+        socket.emit("testInfo", getCacheTest().quizInfo);
+        socket.emit('sendSessionCache', getSessionCache());
 
         socket.on("enterInSession", () => {
+            const cacheTest = getCacheTest();
             if (cacheTest.quizInfo.started && cacheTest.quizInfo.classeDestinataria === session.classe) {
-                if (!containsObject(sessionCache, session) && session.isAuthenticated) {
+                if (!containsObject(getSessionCache(), session) && session.isAuthenticated) {
                     addSession(session);
                 }
                 giveTest();
-                io.emit('sendSessionCache', sessionCache);
+                io.emit('sendSessionCache', getSessionCache());
             }
         });
 
         socket.on("quizCompleted", () => {
+            const sessionCache = getSessionCache();
             const foundObj = sessionCache.find(existingObj => parseInt(existingObj.userID) === parseInt(session.userID));
             if (foundObj) {
                 foundObj.quizCompleted = true;
@@ -82,15 +88,15 @@ module.exports = (io, sessionMiddleware) => {
         });
 
         socket.on('closeSession', () => {
+            //console.log("Closing session...");
             resetCache();
             resetTimer(io);
-            console.log("Dopo chiusura sessione", cacheTest);
-            io.emit("testReceived", cacheTest.quizData, cacheTest.quizInfo.title);
-            io.emit("testInfo", cacheTest.quizInfo);
+            io.emit("testReceived", getCacheTest().quizData, getCacheTest().quizInfo.title);
+            io.emit("testInfo", getCacheTest().quizInfo);
         });
 
         socket.on('getSessionCache', () => {
-            io.emit('sendSessionCache', sessionCache);
+            io.emit('sendSessionCache', getSessionCache());
         });
     });
 };

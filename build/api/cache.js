@@ -24,11 +24,20 @@ function resetCache() {
         quizData: []
     };
     sessionCache = [];
+    //console.log("Cache reset:", cacheTest, sessionCache);
+}
+
+function getCacheTest() {
+    return cacheTest;
+}
+
+function getSessionCache() {
+    return sessionCache;
 }
 
 module.exports = {
-    cacheTest,
-    sessionCache,
+    getCacheTest,
+    getSessionCache,
     containsObject,
     addSession,
     resetCache

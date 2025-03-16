@@ -79,6 +79,7 @@ function initializeUIEvents() {
         $('#overlay, #edit-popup').hide();
     });
     $('#edit-form').on('submit', handleFormSubmit);
+    $("#hide-offline").click(handleHideOfflineToggle); // Aggiungi l'evento per la checkbox
 }
 
 // Funzione per filtrare la tabella
@@ -205,4 +206,17 @@ function updateRow(user) {
     cells.eq(1).text(user.Nome);
     cells.eq(2).text(user.Classe);
     cells.eq(3).text(user.Username);
+}
+
+// Funzione per gestire il toggle della checkbox "Nascondi offline"
+function handleHideOfflineToggle() {
+    const selectedClass = $("#classe-select option:selected").val() === "All" ? "" : "." + $("#classe-select option:selected").val();
+    if ($("#hide-offline").is(":checked")) {
+        $(`tbody>tr${selectedClass}`).each((i, row) => {
+            const isOnline = $(row).find('.status-icon').hasClass("online");
+            $(row).toggle(isOnline);
+        });
+    } else {
+        $(`tbody>tr${selectedClass}`).show();
+    }
 }

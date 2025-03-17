@@ -4,16 +4,17 @@ function addSession(sessionID, userID, isAuthenticated) {
     inSessions.push({ sessionID, userID, isAuthenticated });
 }
 
-function removeSession(userID) {
-    inSessions = inSessions.filter(info => info.userID !== userID);
-}
-
 function getSessions() {
     return inSessions;
 }
 
+function getSession(userID) {
+    return inSessions.find(info => info.userID === userID);
+}
+
+
 module.exports = {
     addSession,
-    removeSession,
-    getSessions
+    getSessions,
+    getSession
 };

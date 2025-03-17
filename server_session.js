@@ -7,6 +7,8 @@ const app = express();
 const os = require('os');
 require('dotenv').config();
 
+const cli = require('./CLI');
+
 const PORT = process.env.PORT || 3000;
 
 // Configurazione del middleware di sessione
@@ -50,6 +52,7 @@ const server = app.listen(PORT, () => {
     }
     const address = myip || 'localhost';
     console.log(`Server is running on http://${address}:${PORT}`);
+    
 });
 
 // Inizializza Socket.io direttamente sul server Express

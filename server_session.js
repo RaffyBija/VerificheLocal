@@ -51,6 +51,7 @@ const server = app.listen(PORT, () => {
         }
     }
     const address = myip || 'localhost';
+    console.clear();
     console.log(`Server is running on http://${address}:${PORT}`);
     
 });

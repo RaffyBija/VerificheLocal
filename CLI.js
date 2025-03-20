@@ -60,6 +60,11 @@ rl.on('line', (input) => {
                 console.log("❌ Specificare un comando valido per ottenere aiuto.");
             }
             break;
+        case 'clear':
+            console.clear();
+            console.log("🚀 Benvenuto nella CLI del server di Node.js");
+            console.log("📌'shutdown' per chiudere il server.");
+            break;
         default:
             console.log("Comando non riconosciuto");
             break;

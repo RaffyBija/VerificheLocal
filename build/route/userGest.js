@@ -91,7 +91,7 @@ router.post('/login', async (req, res) => {
 // Route per il logout
 router.get('/logout', (req, res) => {
     // Rimuove l'utente dalla sessione in sessionManager
-    sessionManager.removeSession(req.session.userID);
+    sessionManager.removeSession(req.sessionID,req.session.userID);
 
     // Distrugge la sessione
     req.session.destroy((err) => {

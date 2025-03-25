@@ -97,6 +97,7 @@ function fetchAttachments() {
         method: 'GET',
         success: function(data) {
             if (data) {
+                $('#attachments-list').html(''); // Pulisce e elimina la lista di allegati presenti
                 console.log(data); // Mostra i dati degli allegati
                 $('#allegati').show(); // Mostra la sezione degli allegati
                 data.forEach(function(attachment) {
@@ -112,10 +113,10 @@ function fetchAttachments() {
 }
 
 // Funzione per aggiungere un allegato alla lista
-function addAttachment(filename, url) {
+function addAttachment(filename, relativePath) {
     const listItem = document.createElement('li');
     const link = document.createElement('a');
-    link.href = `${url}/${filename}`;
+    link.href = `/attachments/${relativePath}`; // Usa il percorso relativo servito dal server
     link.textContent = filename;
     link.download = filename;
     listItem.appendChild(link);

@@ -2,17 +2,17 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
-const PDFDocument = require('pdfkit');  //Libreria per generare e gestire un file .pdf
-const archiver = require('archiver');   //Libreria per creare file .zip
-const Papa = require('papaparse');      //Parser file CSV
+const PDFDocument = require('pdfkit');  // Libreria per generare e gestire un file .pdf
+const archiver = require('archiver');   // Libreria per creare file .zip
+const Papa = require('papaparse');      // Parser file CSV
+const paths = require('../config/paths'); // Importa i percorsi dal file di configurazione
+const { ensureDirectoryExists } = require('../utils/fileUtils'); // Funzione di utilità
 
-let verifica = {}
-
-
+let verifica = {};
 
 // Endpoint per ottenere le verifiche esistenti
 router.get('/tests', (req, res) => {
-    const verificheDir = path.join(__dirname, '../../verifiche');
+    const verificheDir = path.join(paths.VERIFICHE_DIR, 'testi'); // Usa il percorso centralizzato aggiornato
     fs.readdir(verificheDir, (err, files) => {
         if (err) {
             return res.status(500).json({ error: 'Errore durante la lettura delle verifiche' });
@@ -23,9 +23,9 @@ router.get('/tests', (req, res) => {
     });
 });
 
-//Endopoint per ottenere la lista di quiz esistenti
+// Endpoint per ottenere la lista di quiz esistenti
 router.get('/quiz', (req, res) => {
-    const quizDir = path.join(__dirname, '../../verifiche/quiz');
+    const quizDir = path.join(paths.VERIFICHE_DIR, 'quiz'); // Usa il percorso centralizzato
     fs.readdir(quizDir, (err, files) => {
         if (err) {
             return res.status(500).json({ error: 'Errore durante la lettura dei quiz' });
@@ -44,7 +44,7 @@ router.post('/save-page', (req, res) => {
 
     const { fileName, content } = req.body;
     const sanitizedFileName = fileName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-    const filePath = path.join(__dirname, '../../verifiche', `${sanitizedFileName}.html`);
+    const filePath = path.join(paths.VERIFICHE_DIR,'testi', `${sanitizedFileName}.html`);
 
     fs.writeFile(filePath, content, (err) => {
         if (err) {
@@ -55,13 +55,15 @@ router.post('/save-page', (req, res) => {
     });
 });
 
+// Route per salvare un quiz generato dal docente
 router.post('/save-quiz', (req, res) => {
     if (req.session.classe !== 'doc' && req.session.classe !== 'admin') {
         return res.status(403).send('Accesso negato');
     }
+
     const { quizName, questions } = req.body;
     const sanitizedFileName = quizName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-    const filePath = path.join(__dirname, '../../verifiche/quiz', `${sanitizedFileName}.csv`);
+    const filePath = path.join(paths.VERIFICHE_DIR, 'quiz', `${sanitizedFileName}.csv`);
 
     const csvContent = questions.map(q => `${q.index};${q.question};${q.answer}`).join('\r\n');
 
@@ -77,72 +79,60 @@ router.post('/save-quiz', (req, res) => {
 // Endpoint per inviare una verifica esistente
 router.post('/test/send', (req, res) => {
     if (req.session.classe !== 'doc' && req.session.classe !== 'admin') {
-        return res.status(403).json({message: 'Accesso negato'});
+        return res.status(403).json({ message: 'Accesso negato' });
     }
+
     if (req.body.type === "Quiz") {
-        verifica = { ...req.body };//Memorizzo i dati della verifica
+        verifica = { ...req.body }; // Memorizzo i dati della verifica
         verifica.punteggi.totale = 0;
-        const quizFilePath = path.join(__dirname, '../../', `${verifica.testUrl}`);//Ottengo il percorso del file del quiz
+        const quizFilePath = path.join(paths.VERIFICHE_DIR, req.body.testUrl); // Usa il percorso centralizzato
+
         fs.readFile(quizFilePath, "utf-8", (err, data) => {
             if (err) {
                 console.error('Errore durante la lettura del quiz:', err);
                 return res.status(500).send('Errore durante la lettura del quiz');
             }
-        
-            //console.log("Debug CSV Data: ", data); // Verifica il contenuto del file
-        
+
             const parsed = Papa.parse(data, {
                 delimiter: "", // Auto-rileva il separatore ("," o ";")
-                header: false, // Il file NON ha un'intestazione
-                skipEmptyLines: true, // Ignora righe vuote
+                header: false,
+                skipEmptyLines: true,
                 trimHeaders: true
             });
-        
-            //console.log("Debug Parsed Data:", parsed); // Verifica l'output di PapaParse
-        
-            // Controlliamo se ci sono righe valide
+
             if (!parsed.data || parsed.data.length === 0) {
                 console.error("Errore: Nessun dato parsato dal CSV.");
                 return res.status(500).send('Errore nel parsing del quiz');
             }
-        
-            // Creiamo l'array quizData
+
             verifica.quizData = parsed.data.map(row => {
                 verifica.punteggi.totale += verifica.punteggi.corretta;
-                if (row.length < 3) return null; // Evita errori con righe incomplete
-        
+                if (row.length < 3) return null;
+
                 return {
                     index: parseInt(row[0], 10),
                     question: row[1].trim(),
-                    answer: row[2]?.trim() || "N/A" // Se la risposta è vuota, assegna "N/A"
+                    answer: row[2]?.trim() || "N/A"
                 };
-            }).filter(item => item !== null); // Rimuove eventuali righe vuote o errate
-        
-            //console.log("Final Quiz Data:", verifica.quizData); // Debug finale
-        
+            }).filter(item => item !== null);
+
             res.status(200).json({
                 message: 'Verifica inviata!',
-                quizData: verifica.quizData.map(quiz => {
-                    return { index: quiz.index, question: quiz.question };
-                }),
+                quizData: verifica.quizData.map(quiz => ({ index: quiz.index, question: quiz.question })),
                 quizInfo: { type: verifica.type, title: verifica.title, classeDestinataria: verifica.classeDestinataria }
             });
         });
-        
-    }
-    else if (req.body.type === "Testo") {
+    } else if (req.body.type === "Testo") {
         verifica = { ...req.body };
-        //console.log("verifica:",verifica);
         res.status(200).json({ message: 'Verifica inviata!' });
     }
-
 });
 
-//Endpoint per ottenere i dati del quiz e generare un correttore
+// Endpoint per ottenere i dati del quiz e generare un correttore
 router.post("/getResult", (req, res) => {
-    const quizResult = req.body; // Ottengo i le risposte del quiz dal client
+    const quizResult = req.body;
     let userTotPoint = 0;
-    // Confronto le risposte date con quelle corrette
+
     const results = quizResult.map(result => {
         const correctAnswer = verifica.quizData.find(ca => ca.index === parseInt(result.index));
 
@@ -160,25 +150,20 @@ router.post("/getResult", (req, res) => {
         };
     });
 
-    // Ordina l'array results in modo crescente per l'indice
     results.sort((a, b) => parseInt(a.index) - parseInt(b.index));
 
-    //-----------------Generazione PDF-----------------
     const doc = new PDFDocument();
     const today = new Date();
     const dateString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
-    const dirPath = path.join(__dirname, '../../verifiche','/risultati', `${dateString}_${verifica.title}_${req.session.classe}`);
+    const dirPath = path.join(paths.VERIFICHE_DIR, 'risultati', `${dateString}_${verifica.title}_${req.session.classe}`);
 
-    if (!fs.existsSync(dirPath)) {
-        fs.mkdirSync(dirPath, { recursive: true });
-    }
+    ensureDirectoryExists(dirPath);
 
     const pdfFilePath = path.join(dirPath, `${(req.session.userSurname).replace(/[^a-z0-9]/gi, '_') || ""}_${req.session.user}_results.pdf`);
-
     const writeStream = fs.createWriteStream(pdfFilePath);
 
     doc.pipe(writeStream);
-    doc.fontSize(10).text(`Alunno: ${req.session.userSurname} ${req.session.user}  Classe: ${req.session.classe}`, { align: 'right', oblique: true })
+    doc.fontSize(10).text(`Alunno: ${req.session.userSurname} ${req.session.user}  Classe: ${req.session.classe}`, { align: 'right', oblique: true });
     doc.moveDown();
     doc.fontSize(16).text('Risultati del Quiz ' + verifica.title, { align: 'center' });
     doc.moveDown();
@@ -191,11 +176,6 @@ router.post("/getResult", (req, res) => {
     });
 
     doc.fontSize(16).text(`Punteggio ottenuto: ${userTotPoint}/${verifica.punteggi.totale}`, { align: 'right' });
-    doc.moveDown();
-    doc.fontSize(14).text('Legenda:', { underline: true });
-    doc.fontSize(12).text(`Risposta corretta: +${verifica.punteggi.corretta} punti`);
-    doc.text(`Risposta sbagliata: ${verifica.punteggi.sbagliata} punti`);
-    doc.text('Risposta non data: 0 punti');
     doc.end();
 });
 
@@ -208,13 +188,13 @@ router.get('/download-results', (req, res) => {
     const today = new Date();
     const dateString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
     const verificaTitle = req.query.title || "verifica"; // Assicurati che `verifica.title` sia definito
-    const dirPath = path.join(__dirname, '../../verifiche','risultati', `${dateString}_${verifica.title}_${verifica.classeDestinataria}`);
+    const dirPath = path.join(paths.VERIFICHE_DIR, 'risultati', `${dateString}_${verifica.title}_${verifica.classeDestinataria}`);
 
     if (!fs.existsSync(dirPath)) {
         return res.status(404).send('Nessun risultato trovato');
     }
 
-    const zipFilePath = path.join(__dirname, '../../verifiche','risultati', `${dateString}_${verifica.title}_${verifica.classeDestinataria}.zip`);
+    const zipFilePath = path.join(paths.VERIFICHE_DIR, 'risultati', `${dateString}_${verifica.title}_${verifica.classeDestinataria}.zip`);
 
     // Creazione del file ZIP
     const output = fs.createWriteStream(zipFilePath);
@@ -244,6 +224,6 @@ router.get('/download-results', (req, res) => {
     archive.directory(dirPath, false);
     archive.finalize();
 });
+
 // Funzione per ottenere sempre l'oggetto aggiornato
- 
-module.exports = {router, getVerifica : () => verifica.title, getClasseDestinataria: ()=>{verifica.classeDestinataria} };
+module.exports = { router, getVerifica: () => verifica.title, getClasseDestinataria: () => verifica.classeDestinataria };

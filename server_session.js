@@ -5,6 +5,7 @@ const socketAPI = require("./build/api/socketAPI"); // Importa le funzioni di So
 const session = require('./build/midw/session').router; // Importa il middleware di sessione
 const app = express();
 const os = require('os');
+const paths = require('./build/config/paths');
 require('dotenv').config();
 
 const cli = require('./CLI');
@@ -34,7 +35,7 @@ app.use('/',multerAPI);
 
 // Middleware
 app.use(express.static('./build/public')); // Serve file statici
-app.use('/verifiche',express.static('verifiche'));
+app.use('/verifiche',express.static(paths.VERIFICHE_DIR));
 
 // Avvio del server
 const server = app.listen(PORT, () => {

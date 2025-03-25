@@ -1,5 +1,6 @@
 // test.js
 
+const BASE_DIR = '/verifiche/testi/';
 
 function generatePage() {
     const content = editorInstance.getData();
@@ -71,7 +72,9 @@ async function sendTest(event) {
 
         await sendTestData(existingTestName, testTitle, selectedClass, minutes, seconds);
 
-        $('#classeList').val('');
+        $('#classeList,#testTitle,#minutesInput,#secondsInput').val('');
+
+        $('#fileList').html('');
         event.target.reset();
     } catch (error) {
         console.error('Errore:', error);
@@ -105,11 +108,14 @@ async function uploadAttachments(files) {
 
 // **Funzione per inviare i dati del test**
 async function sendTestData(existingTestName, testTitle, selectedClass, minutes, seconds) {
+    
+    
+    
     const response = await $.ajax({
         url: "/api/test/send",
         type: "POST",
         data: {
-            testUrl: `/verifiche/${existingTestName}`,
+            testUrl: `${BASE_DIR}${existingTestName}`,
             type: "Testo",
             title: testTitle,
             classeDestinataria: selectedClass
@@ -118,7 +124,7 @@ async function sendTestData(existingTestName, testTitle, selectedClass, minutes,
 
     alert(response.message);
     socket.emit('sendTest', 
-        {testUrl: `/verifiche/${existingTestName}`}
+        {testUrl: `${BASE_DIR}${existingTestName}`}
        ,{ title: testTitle,
         type: "Testo",
         classeDestinataria: selectedClass}

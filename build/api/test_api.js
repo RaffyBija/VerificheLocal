@@ -86,7 +86,6 @@ router.post('/test/send', (req, res) => {
         verifica = { ...req.body }; // Memorizzo i dati della verifica
         verifica.punteggi.totale = 0;
         const quizFilePath = path.join(paths.VERIFICHE_DIR, req.body.testUrl); // Usa il percorso centralizzato
-
         fs.readFile(quizFilePath, "utf-8", (err, data) => {
             if (err) {
                 console.error('Errore durante la lettura del quiz:', err);
@@ -94,7 +93,7 @@ router.post('/test/send', (req, res) => {
             }
 
             const parsed = Papa.parse(data, {
-                delimiter: "", // Auto-rileva il separatore ("," o ";")
+                delimiter: "", // Auto-rileva il separatore
                 header: false,
                 skipEmptyLines: true,
                 trimHeaders: true
@@ -155,7 +154,7 @@ router.post("/getResult", (req, res) => {
     const doc = new PDFDocument();
     const today = new Date();
     const dateString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
-    const dirPath = path.join(paths.VERIFICHE_DIR, 'risultati', `${dateString}_${verifica.title}_${req.session.classe}`);
+    const dirPath = path.join(paths.CORRECTIONS_DIR, `${dateString}_${verifica.title}_${req.session.classe}`);
 
     ensureDirectoryExists(dirPath);
 

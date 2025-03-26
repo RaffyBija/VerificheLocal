@@ -8,7 +8,8 @@ module.exports = {
     STORAGE_DIR,
     BUILD_DIR,
     UPLOADS_DIR: path.join(STORAGE_DIR, 'uploads'),
-    CORRECTIONS_DIR: path.join(ROOT_DIR, 'correzioni'),
+    CORRECTIONS_DIR: path.join(STORAGE_DIR, 'correzioni'),
     VERIFICHE_DIR: path.join(STORAGE_DIR,'verifiche'),
     PUBLIC_DIR: path.join(BUILD_DIR, 'public'),
+    PRIVATE_DIR: path.join(BUILD_DIR,'nopublic')
 };

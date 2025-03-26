@@ -1,5 +1,5 @@
 // quiz.js
-
+const FOLDER_NAME = "quiz/";
 //Fuzione per ottenere la lista qui quiz (file .csv) caricati sul server
 function getQuizs() {
     $('#loading-overlay').show(); // Mostra overlay prima della richiesta
@@ -220,7 +220,7 @@ function sendQuiz(event) {
         alert("Seleziona una classe.");
         return;
     }
-    if (minutes < 0 || seconds < 0) {
+    if (minutes <= 0 || seconds < 0) {
         alert("Inserisci un valore valido di minuti e secondi.");
         return;
     }
@@ -230,7 +230,7 @@ function sendQuiz(event) {
         type: "POST",
         headers: { 'Content-Type': 'application/json' },
         data: JSON.stringify({
-            testUrl: '/verifiche/quiz/' + existingQuizName,
+            testUrl: FOLDER_NAME + existingQuizName,
             type: "Quiz",
             title: quizTitle,
             punteggi: quizPoint,

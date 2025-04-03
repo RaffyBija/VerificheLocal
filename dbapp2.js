@@ -61,7 +61,7 @@ async function updateUser(user) {
     try {
         await pool.execute(`UPDATE Alunni 
                    SET Cognome = ?, Nome = ?, Classe = ?, Username = ?, Password = ? 
-                   WHERE id = ?`, [user.Cognome, user.Nome, user.Classe, user.Username, user.Password, user.ID]);
+                   WHERE id = ?`, [user.cognome, user.nome, user.classe, user.username, user.password, user.ID]);
     } catch (err) {
         console.error('Errore: ', err);
         throw err;

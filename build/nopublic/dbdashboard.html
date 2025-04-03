@@ -77,6 +77,8 @@
                     <input type="checkbox" id="hide-offline" name="hide-offline" >
                     Nascondi utenti offline
                 </label>
+                <input type="search" name="searchBar" id="search-bar" placeholder="Cerca...">
+                <button id="add-user-btn">Aggiungi Nuovo Utente</button>
             </div>
             <div id="table-container">
                 <table id="data-table">
@@ -100,7 +102,7 @@
         </main>
     </div>
     <div id="edit-popup">
-        <h3>Modifica Record</h3>
+        <h3 id="form-title">Modifica Record</h3>
         <form id="edit-form">
             <input type="hidden" id="edit-id">
             <label for="edit-cognome">Cognome:</label>
@@ -118,7 +120,7 @@
             <label for="edit-password">Password:</label>
             <input type="password" id="edit-password" required>
             <br><br>
-            <button type="submit">Salva</button>
+            <button type="submit" id="form-submit-btn">Salva</button>
             <button type="button" id="close-popup">Annulla</button>
         </form>
     </div>

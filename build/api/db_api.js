@@ -25,9 +25,9 @@ app.get('/data', common.checkAuth, async (req, res) => {
 app.post('/update', common.checkAuth, async (req, res) => {
     const user = req.body;
     const result = await db.findPassword(user.ID);
-    const encryptedPassword = common.encryptPassword(user.Password);
+    const encryptedPassword = common.encryptPassword(user.password);
 
-    if (!(result.Password === user.Password)) user.Password = encryptedPassword;
+    if (!(result.Password === user.password)) user.password = encryptedPassword;
     await db.updateUser(user);
     const updateUser = await db.findUserByID(user.ID);
     res.status(200).json({ updateUser, messaggio: 'Campo aggiornato con successo!' });

@@ -15,11 +15,11 @@ const db = require('../../dbapp2');
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
-// Route per la registrazione
+// Route per la registrazione o aggiunta di un nuovo utente
 router.post('/register', async (req, res) => {
     const { nome, cognome, username, password, classe } = req.body;
-    if (!username || !password) {
-        return res.status(400).json({ message: 'Missing username or password' });
+    if (!nome || !cognome || !username || !password || !classe) {
+        return res.status(400).json({ message: 'Tutti i campi sono obbligatori' });
     }
 
     try {
@@ -37,10 +37,18 @@ router.post('/register', async (req, res) => {
         const formattedCognome = cognome.charAt(0).toUpperCase() + cognome.slice(1).toLowerCase();
         const formattedClasse = classe.replace(/\s+/g, '').toUpperCase();
         await db.saveUser(formattedNome, formattedCognome, username.toLowerCase(), encryptedPassword, formattedClasse);
-        res.status(201).json({ message: 'Utente registrato con successo', redirectTo: '/login' });
+
+        // Risposta diversa in base al contesto
+        if (req.session && req.session.isAuthenticated) {
+            // Richiesta da un utente autenticato (es. admin)
+            res.status(201).json({ message: 'Utente aggiunto con successo' });
+        } else {
+            // Richiesta da un utente non autenticato (es. registrazione pubblica)
+            res.status(201).json({ message: 'Utente registrato con successo', redirectTo: '/login' });
+        }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Errore durante la registrazione dell\'utente: ' + error });
+        res.status(500).json({ message: 'Errore durante l\'operazione: ' + error });
     }
 });
 

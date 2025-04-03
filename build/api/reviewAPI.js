@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
+const paths = require('../config/paths');
 const fs = require('fs');
 const { checkAuth } = require('../midw/common');
 
@@ -11,12 +12,10 @@ router.get('/reView', checkAuth, (req, res) => {
         return res.status(403).send('Accesso negato');
     }
 
-    const sanitizedCognome = surname.toLowerCase();
+    const sanitizedCognome = surname.toLowerCase().replace(/\s+/g, '');
     const sanitizedNome = username.substring(0, 1).toUpperCase();
     const fileName = `${sanitizedCognome}${sanitizedNome}.pdf`;
-    //console.log("File Name: ",fileName);
-    const filePath = path.join(__dirname, `../../storage/correzioni/${classe}`, fileName);
-    //console.log("File Path: ",filePath);
+    const filePath = path.join(paths.CORRECTIONS_DIR, classe, fileName);
     if (fs.existsSync(filePath)) {
         res.setHeader('Content-Disposition', `inline; filename=${fileName}`);
         res.setHeader('Content-Type', 'application/pdf');

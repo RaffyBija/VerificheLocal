@@ -108,6 +108,9 @@ const uploadAttachments = multer({ storage: attachmentsStorage });
 
 // Endpoint per inviare la pagina viewupload
 router.get('/view', common.checkAuth, (req, res) => {
+    if(req.session.classe!== 'admin')
+        return res.sendStatus(403);
+    
     const baseDir = paths.STORAGE_DIR;
     const currentDir = req.query.dir ? path.join(baseDir, req.query.dir) : baseDir;
 
@@ -131,7 +134,7 @@ router.get('/view', common.checkAuth, (req, res) => {
         if (item.type === 'directory') {
             html += `<li><a href="?dir=${path.relative(baseDir, item.path)}">📂${item.name}/</a></li>`;
         } else {
-            html += `<li><a href="../uploads/${path.relative(baseDir, item.path)}" target="_blank">${item.name}</a></li>`;
+            html += `<li><a href="${path.relative(baseDir, item.path)}" target="_blank">${item.name}</a></li>`;
         }
     });
     html += '</ul>';

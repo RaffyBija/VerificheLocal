@@ -1,0 +1,97 @@
+/* Imposta uno sfondo chiaro e centra il contenuto */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Header fisso */
+header {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+/* Contenitore per il titolo centrato */
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    flex: 1; /* Occupa lo spazio rimanente */
+    text-align: center; /* Centra il testo */
+}
+
+/* Stile per il tasto home */
+header #home-button {
+    text-decoration: none;
+    color: white;
+    font-size: 1.5rem;
+    margin-right: auto; /* Allinea il tasto a sinistra */
+}
+
+/* Main content */
+main {
+    margin-top: 70px; /* Spazio per l'header fisso */
+    padding: 20px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* Tasto "Torna alla cartella precedente" */
+#back-button {
+    display: inline-block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #007bff;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+#back-button:hover {
+    color: #0056b3;
+}
+
+/* Lista di file e cartelle */
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+ul li {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+ul li:hover {
+    background-color: #f0f0f0;
+}
+
+/* Link ai file e alle cartelle */
+ul li a {
+    text-decoration: none;
+    color: #333333;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+ul li a:hover {
+    color: #007bff;
+}

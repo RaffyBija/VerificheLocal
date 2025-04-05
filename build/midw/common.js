@@ -44,10 +44,39 @@ module.exports = {
                     <head>
                         <title>Unauthorized</title>
                         <meta http-equiv="refresh" content="2;url=/login" />
+                        <style>
+                            body {
+                                font-family: Arial, sans-serif;
+                                background-color: #f8f9fa;
+                                color: #343a40;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                height: 100vh;
+                                margin: 0;
+                            }
+                            .container {
+                                text-align: center;
+                                background: #ffffff;
+                                padding: 20px;
+                                border-radius: 8px;
+                                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                            }
+                            img {
+                                max-width: 500px;
+                                margin-bottom: 20px;
+                            }
+                            p {
+                                font-size: 16px;
+                                margin: 10px 0;
+                            }
+                        </style>
                     </head>
                     <body>
-                        <h1>Unauthorized: Please log in</h1>
-                        <p>Verrai reindirizzato alla pagina di login tra pochi secondi...</p>
+                        <div class="container">
+                            <img src="/img/9ptgeo.gif" alt="401 Error" />
+                            <p>Verrai reindirizzato alla pagina di login tra pochi secondi...</p>
+                        </div>
                     </body>
                 </html>
             `);

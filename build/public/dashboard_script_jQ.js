@@ -79,10 +79,13 @@ function populateClassSelect(data) {
 function handleError(err) {
     console.error("Errore: ", err.status, err.statusText);
     const message = err.responseJSON?.message || "Si è verificato un errore. Riprova più tardi.";
-    alert(`Errore: ${message}`);
+    
     if (err.status === 401) {
+        alert("Sessione scaduta. Effettua nuovamente il login.");
         window.location.href = "/login";
+        return;
     }
+    alert(`Errore: ${message}`);
 }
 
 // Funzione per inizializzare gli eventi dell'interfaccia utente

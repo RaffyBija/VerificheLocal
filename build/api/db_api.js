@@ -33,18 +33,6 @@ app.post('/update', common.checkAuth, async (req, res) => {
     res.status(200).json({ updateUser, messaggio: 'Campo aggiornato con successo!' });
 });
 
-// Endpoint per restituire le info dell'utente
-app.get('/user', common.checkAuth, (req, res) => {
-    if (!req.session.user) {
-        return res.status(401).send('Utente non autenticato');
-    }
-    res.json({ 
-        username: req.session.user,
-        surname: req.session.userSurname,
-        classe: req.session.classe
-    });
-});
-
 // Endpoint per ottenere Dati Specifici dal database
 app.get('/data/:id', common.checkAuth, async (req, res) => {
     const { id } = req.params;
@@ -86,6 +74,5 @@ app.get('/classes', common.checkAuth, async (req, res) => {
         res.status(500).send("Errore server durante il recupero delle classi");
     }
 });
-
 
 module.exports = app;

@@ -1,0 +1,21 @@
+.error-container{
+    text-align: center;
+    margin-top: 100px;
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+}
+
+.error-container img{
+    width: 300px;
+    margin: 20px 0;
+}
+
+.error-container h1{
+    font-size: 48px;
+    color:#e63946
+}
+
+.error-container p{
+    font-size:20px;
+    color:#333;
+}

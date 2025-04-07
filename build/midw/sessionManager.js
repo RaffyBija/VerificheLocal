@@ -14,10 +14,15 @@ function getSession(userID) {
     return inSessions.find(info => info.userID === userID);
 }
 
+function sessionExists(sessionID, userID) {
+    return inSessions.some(a => a.sessionID === sessionID && a.userID === userID);
+}
+
 
 module.exports = {
     addSession,
     getSessions,
     removeSession,
-    getSession
+    getSession,
+    sessionExists
 };

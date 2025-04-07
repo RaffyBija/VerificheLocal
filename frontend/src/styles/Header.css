@@ -1,0 +1,87 @@
+/* Header fisso */
+header {
+    background-color: #4CAF50; /* Colore verde acceso */
+    color: white;
+    padding: 10px 20px;
+    display: flex; /* Usa flexbox per il layout */
+    align-items: center;
+    justify-content: space-between; /* Distribuisce gli elementi */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%; /* L'header occupa tutta la larghezza disponibile */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    font-family: 'Roboto', Arial, sans-serif;
+    box-sizing: border-box; /* Include padding e bordi nella larghezza */
+}
+
+/* Contenitore per il titolo centrato */
+header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    text-align: center;
+    font-weight: bold;
+    letter-spacing: 1px;
+    white-space: nowrap; /* Evita che il testo vada a capo */
+    overflow: hidden; /* Nasconde il testo in eccesso */
+    text-overflow: ellipsis; /* Aggiunge "..." se il testo è troppo lungo */
+}
+
+/* Stile per il tasto home */
+header #home-button {
+    text-decoration: none;
+    color: white;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.3s ease;
+    white-space: nowrap; /* Evita che il testo vada a capo */
+}
+
+header #home-button:hover {
+    color: #d4f1d4; /* Colore più chiaro al passaggio del mouse */
+}
+
+/* Stile per il nome utente */
+header #username-display {
+    font-size: 1rem;
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 5px 10px;
+    border-radius: 20px;
+    display: inline-flex; /* Usa inline-flex per adattarsi al contenuto */
+    align-items: center;
+    gap: 8px;
+    overflow: hidden; /* Nasconde il testo in eccesso */
+    text-overflow: ellipsis; /* Aggiunge "..." se il testo è troppo lungo */
+    white-space: nowrap; /* Evita che il testo vada a capo */
+    flex-shrink: 0; /* Impedisce che l'username venga ridotto */
+}
+
+/* Icona accanto al nome utente */
+header #username-display::before {
+    content: '👤';
+    font-size: 1.2rem;
+}
+
+/* Responsività per schermi piccoli */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    header #home-button {
+        font-size: 1.2rem;
+    }
+
+    header #username-display {
+        font-size: 0.9rem;
+        padding: 4px 8px;
+        max-width: 100px; /* Riduce la larghezza massima su schermi piccoli */
+    }
+}

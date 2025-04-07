@@ -1,0 +1,11 @@
+footer {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px 20px;
+    text-align: center;
+    background-color: #282c34;
+    color: white;    
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    height: 60px; /* Altezza fissa del footer */
+    box-sizing: border-box;
+}

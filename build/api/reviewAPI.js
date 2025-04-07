@@ -3,95 +3,95 @@ const router = express.Router();
 const path = require('path');
 const paths = require('../config/paths');
 const fs = require('fs');
-const { checkAuth } = require('../midw/common');
 const {getDirectoryStructure} = require('../utils/fileUtils');
 
-// router.get('/reView', checkAuth, (req, res) => {
-//     const {username, surname, classe} = req.query;
+// Helper per ottenere i dati dell'utente dalla sessione
+const getUserFromSession = (req) => {
+    if (!req.session || !req.session.user) {
+        return null;
+    }
+    return {
+        Cognome: req.session.user.Cognome,
+        Nome: req.session.user.Nome,
+        Classe: req.session.user.Classe,
+    };
+};
 
-//     if(req.session.user !== username && req.session.classe !== classe && req.session.userSurname !== surname){
-//         return res.status(403).send('Accesso negato');
-//     }
+// Helper per costruire il percorso base della directory personale
+const getBaseDir = (user) => {
+    const sanitizedCognome = user.Cognome.replace(/\s+/g, '');
+    const personalDir = `${sanitizedCognome}_${user.Nome}`;
+    return path.join(paths.CORRECTIONS_DIR, user.Classe, personalDir);
+};
 
-//     const sanitizedCognome = surname.toLowerCase().replace(/\s+/g, '');
-//     const sanitizedNome = username.substring(0, 1).toUpperCase();
-//     const fileName = `${sanitizedCognome}${sanitizedNome}.pdf`;
-//     const filePath = path.join(paths.CORRECTIONS_DIR, classe, fileName);
-//     if (fs.existsSync(filePath)) {
-//         res.setHeader('Content-Disposition', `inline; filename=${fileName}`);
-//         res.setHeader('Content-Type', 'application/pdf');
-//         fs.createReadStream(filePath).pipe(res);//Invia il PDF in streaming
-//     } else {
-//         res.status(404).send('File non trovato');
-//     }
-// });
+// Helper per verificare l'esistenza di un file o directory
+const verifyPathExists = (absolutePath, baseDir) => {
+    return absolutePath.startsWith(baseDir) && fs.existsSync(absolutePath);
+};
 
 //Restituisco la cartella personale con la lista dei file per la revisione della verifica
-router.get('/get-review', checkAuth, (req,res)=>{
-    const user ={
-        username: req.session.user,
-        surname: req.session.userSurname,
-        classe: req.session.classe
-    }
-    if(!user){
-        res.status(401).send('Utente non autenticato');
-    }
-    
-    const sanitizedCognome = user.surname.replace(/\s+/g, '');
-    const personalDir = `${sanitizedCognome}_${user.username}`;
-    const baseDir = path.join(paths.CORRECTIONS_DIR, user.classe,personalDir);
-    const currentDir = req.query.dir ? path.join(baseDir, req.query.dir) : baseDir;
-    
-    // Verifica che la cartella esista
-    if (!fs.existsSync(currentDir)) {
-        return res.status(404).send('Cartella non trovata!');
+router.get('/get-personal-review-folder', (req, res) => {
+    const user = getUserFromSession(req);
+
+    if (!user) {
+        return res.status(401).json({error:"Utente non autenticato"});
     }
 
-    router.use(express.static(currentDir));
-    
+    const baseDir = getBaseDir(user);
+    const currentDir = req.query.dir ? path.join(baseDir, req.query.dir) : baseDir;
+
+    // Verifica che la cartella esista
+    if (!verifyPathExists(currentDir, baseDir)) {
+        return res.status(404).json({ error: 'Cartella non trovata' });
+    }
+
     const structure = getDirectoryStructure(currentDir);
     if (!structure) {
-        return res.status(404).send('Directory non trovata');
+        return res.status(404).json({ error: 'Errore nella lettura della directory' });
     }
-    let parentDir = req.query.dir ? path.dirname(req.query.dir) : ''; // Indirizzo per tornare indietro
-    // Prepara il contenuto HTML
-    let html = `
-    <!DOCTYPE html>
-    <html lang="it">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Explorer</title>
-        <link rel="stylesheet" href="/css/explorer_style.css" />
-    </head>
-    <body>
-        <header>
-            <a href="/studentdashboard" id="home-button">🏠</a>
-            <h1>Cartella delle Verità</h1>
-        </header>
-        <main>
-            <a href="?dir=${parentDir}" id="back-button">↰</a>
-            <span id="current-path">>D:/${path.relative(baseDir, currentDir)}</span>
-            <ul>
-    `;
 
-    // Aggiungi i file e le cartelle alla lista
-    structure.forEach(item => {
-        if (item.type === 'directory') {
-            html += `<li><a href="?dir=${path.relative(baseDir, item.path)}">📂 ${item.name}/</a></li>`;
-        } else {
-            html += `<li><a href="${path.relative(baseDir, item.path)}" target="_blank">📄 ${item.name}</a></li>`;
-        }
+    router.use(express.static(currentDir));// Serve i file statici dalla directory corrente
+
+    const parentDir = req.query.dir ? path.dirname(req.query.dir) : '';
+
+    // Restituisci la struttura della directory come JSON
+    res.status(200).json({
+        currentPath: path.relative(baseDir, currentDir),
+        parentDir,
+        files: structure.map(item => ({
+            name: item.name,
+            type: item.type,
+            path: path.relative(baseDir, item.path)
+        }))
     });
+});
 
-    html += `
-            </ul>
-        </main>
-    </body>
-    </html>
-    `;
+// Endpoint per servire un file specifico
+router.get('/get-file', (req, res) => {
+    const user = getUserFromSession(req);
 
-    res.status(200).send(html);
-})
+    if (!user) {
+        return res.status(401).json({ error: 'Utente non autenticato' });
+    }
+
+    const baseDir = getBaseDir(user);
+
+    // Percorso relativo del file richiesto
+    const relativeFilePath = req.query.file;
+    if (!relativeFilePath) {
+        return res.status(400).json({ error: 'Percorso del file non specificato' });
+    }
+
+    // Percorso assoluto del file
+    const absoluteFilePath = path.join(baseDir, relativeFilePath);
+
+    // Verifica che il file esista e sia all'interno della directory dell'utente
+    if (!verifyPathExists(absoluteFilePath, baseDir)) {
+        return res.status(404).json({ error: 'File non trovato' });
+    }
+
+    // Invia il file al client
+    res.sendFile(absoluteFilePath);
+});
 
 module.exports = router;

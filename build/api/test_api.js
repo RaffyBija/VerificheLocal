@@ -190,7 +190,7 @@ router.get('/download-results', (req, res) => {
     const dirPath = path.join(paths.VERIFICHE_DIR, 'risultati', `${dateString}_${verifica.title}_${verifica.classeDestinataria}`);
 
     if (!fs.existsSync(dirPath)) {
-        return res.status(404).send('Nessun risultato trovato');
+        return res.status(404).redirect('/error/404?message=Nessun risultato trovato');
     }
 
     const zipFilePath = path.join(paths.VERIFICHE_DIR, 'risultati', `${dateString}_${verifica.title}_${verifica.classeDestinataria}.zip`);

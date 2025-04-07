@@ -69,7 +69,7 @@
 
         <section id="actions">
                 <a href="/verificastudente" class="button">Accedi alla Verifica</a>
-                <a href="/api/get-review" class="button" target="_blank">Visualizza Correzioni</a>
+                <a href="/review-explorer" class="button" target="_blank">Visualizza Correzioni</a>
         </section>
     </main>
     <footer>
@@ -77,12 +77,13 @@
     </footer>
     <script>
         $(document).ready(function(){
-            $.get('/api/user')
+            $.get('/api/get-userInfo')
                 .done(function(data){
-                    const {username, surname, classe} = data;
-                    $("#user-details").append(`<p>Nome: ${username}</p>`);
-                    $("#user-details").append(`<p>Cognome: ${surname}</p>`);
-                    $("#user-details").append(`<p>Classe: ${classe}</p>`);
+                    console.log("DATA",data);
+                    const {Nome, Cognome, Classe} = data.user;
+                    $("#user-details").append(`<p>Nome: ${Nome}</p>`);  
+                    $("#user-details").append(`<p>Cognome: ${Cognome}</p>`);
+                    $("#user-details").append(`<p>Classe: ${Classe}</p>`);
                 })
         })
 

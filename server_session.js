@@ -1,41 +1,55 @@
 // Importazione delle librerie necessarie
 const express = require('express');
 const { Server } = require("socket.io");
+const path = require('path');
+const paths = require('./build/config/paths'); // Importa i percorsi configurati
 const socketAPI = require("./build/api/socketAPI"); // Importa le funzioni di Socket.io
 const session = require('./build/midw/session').router; // Importa il middleware di sessione
 const app = express();
 const os = require('os');
-const paths = require('./build/config/paths');
 require('dotenv').config();
 
 const cli = require('./CLI');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Configurazione del middleware di sessione
 app.use(session);
 
-const view = require('./build/views/view');
-app.use('/',view);
+// Route per le viste
+const view = require(path.join(paths.BUILD_DIR, 'views', 'view'));
+app.use('/', view);
 
-const route = require('./build/route/userGest');
-app.use('/',route);
+// Route per la gestione degli utenti
+const route = require(path.join(paths.BUILD_DIR, 'route', 'userGest'));
+app.use('/', route);
 
-const apiTests = require('./build/api/test_api').router; // Importa le route API
-app.use('/api', apiTests); // Utilizza le API delle verifiche
+// API per le verifiche
+const apiTests = require(path.join(paths.BUILD_DIR, 'api', 'test_api')).router;
+app.use('/api', apiTests);
 
-const apiRevisionView = require('./build/api/reviewAPI')
-app.use('/api',apiRevisionView);
+// API per la revisione delle verifiche
+const apiRevisionView = require(path.join(paths.BUILD_DIR, 'api', 'reviewAPI'));
+app.use('/api', apiRevisionView);
 
-const apiDB = require('./build/api/db_api');//Importo le api del database
-app.use('/api',apiDB);
+// API per il database
+const apiDB = require(path.join(paths.BUILD_DIR, 'api', 'db_api'));
+app.use('/api', apiDB);
 
-const multerAPI = require('./build/route/multer');
-app.use('/',multerAPI);
+// API per l'upload dei file
+const multerAPI = require(path.join(paths.BUILD_DIR, 'route', 'multer'));
+app.use('/', multerAPI);
 
-// Middleware
-app.use(express.static('./build/public')); // Serve file statici
-app.use('/verifiche',express.static(paths.VERIFICHE_DIR));
+// Middleware per servire file statici
+app.use(express.static(paths.PUBLIC_DIR)); // Serve file statici dalla directory public
+app.use('/verifiche', express.static(paths.VERIFICHE_DIR)); // Serve le verifiche dalla directory configurata
+
+
+//TEST REACT
+app.use(express.static(paths.FEBUILD_DIR)); // Serve file statici dalla directory frontend/build
+app.get('*', (req,res)=>{
+    res.sendFile(path.join(paths.FEBUILD_DIR, 'index.html'));
+});
 
 // Avvio del server
 const server = app.listen(PORT, () => {
@@ -54,11 +68,10 @@ const server = app.listen(PORT, () => {
     const address = myip || 'localhost';
     console.clear();
     console.log(`Server is running on http://${address}:${PORT}`);
-    
 });
 
 // Inizializza Socket.io direttamente sul server Express
 const io = new Server(server);
 
 // Passa l'oggetto io alla funzione che gestisce la logica della WebSocket
-socketAPI(io,session);
+socketAPI(io, session);

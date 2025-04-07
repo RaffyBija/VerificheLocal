@@ -1,0 +1,180 @@
+/* Imposta uno sfondo chiaro e centra il contenuto */
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    color: #333;
+}
+
+/* Main content */
+main {
+    margin-top: 80px; /* Spazio per l'header fisso */
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column; /* Disposizione verticale */
+    overflow-y: auto; /* Aggiunge lo scroll verticale se necessario */
+    box-sizing: border-box; /* Include padding e bordi nella larghezza */
+    width: 100%; /* Occupa tutta la larghezza */
+    max-width: 100%; /* Evita che ecceda la larghezza */
+    height: calc(100vh - 140px); /* Altezza totale meno header (80px) e footer (60px) */
+}
+
+
+/* Tasto "Torna alla cartella precedente" */
+#back-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#back-button:hover {
+    background-color: #388E3C;
+    color: #fff;
+}
+
+/* Lista di file e cartelle */
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column; /* Disposizione verticale */
+    gap: 15px; /* Spaziatura tra gli elementi */
+}
+
+/* Stile per ogni elemento della lista */
+ul li {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    align-items: center; /* Allinea il contenuto verticalmente */
+    justify-content: space-between; /* Spaziatura tra icona e testo */
+    cursor: pointer;
+    overflow: hidden; /* Nasconde il contenuto in eccesso */
+    text-overflow: ellipsis; /* Aggiunge "..." se il testo è troppo lungo */
+}
+
+/* Effetto hover sugli elementi della lista */
+ul li:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Icone e testo per file e cartelle */
+ul li button {
+    width: 100%;
+    padding: 15px;
+    text-decoration: none;
+    color: #333;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    gap: 10px; /* Spaziatura tra l'icona e il testo */
+    overflow: hidden; /* Nasconde il testo in eccesso */
+    text-overflow: ellipsis; /* Aggiunge "..." se il testo è troppo lungo */
+    white-space: nowrap; /* Evita che il testo vada a capo */
+}
+
+/* Effetto hover sui pulsanti */
+ul li button:hover {
+    color: #4CAF50;
+}
+
+/* Icone e testo per file e cartelle */
+ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    justify-content: flex-start; /* Allinea il testo a sinistra */
+    gap: 10px; /* Spaziatura tra l'icona e il testo */
+    overflow: hidden; /* Nasconde il testo in eccesso */
+    text-overflow: ellipsis; /* Aggiunge "..." se il testo è troppo lungo */
+    white-space: nowrap; /* Evita che il testo vada a capo */
+}
+
+/* Effetto hover sui pulsanti */
+ul li a:hover {
+    color: #4CAF50;
+}
+
+/* Icone */
+ul li button span,
+ul li a span {
+    font-size: 1.5rem;
+    margin-right: 10px;
+}
+
+/* Pulsanti generici */
+button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #4CAF50;
+    transition: color 0.3s ease;
+}
+
+button:hover {
+    color: #388E3C;
+}
+/* Contenitore per il pulsante "Torna indietro" e la breadcrumb */
+.breadcrumb-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Spaziatura tra il pulsante e la breadcrumb */
+    margin-bottom: 20px;
+    z-index: 100;
+}
+
+/* Stile per il percorso corrente (breadcrumb) */
+.breadcrumb {
+    font-size: 0.9rem;
+    color: #555; /* Colore del testo meno prominente */
+    background-color: #f9f9f9; /* Sfondo chiaro */
+    padding: 8px 12px;
+    border-radius: 8px; /* Bordi arrotondati */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombra leggera */
+    max-width: 100%; /* Evita che superi la larghezza della pagina */
+    overflow: hidden; /* Nasconde il testo in eccesso */
+    text-overflow: ellipsis; /* Aggiunge "..." se il testo è troppo lungo */
+    white-space: nowrap; /* Evita che il testo vada a capo */
+}
+
+/* Stile per i segmenti del percorso */
+.breadcrumb-segment {
+    color: #555; /* Colore neutro per i segmenti */
+}
+
+/* Stile per il separatore */
+.breadcrumb-divider {
+    color: #999; /* Colore grigio per il separatore */
+}
+
+/* Stile per il segmento corrente */
+.breadcrumb-current {
+    font-weight: bold;
+    color: #333; /* Colore più scuro per il segmento corrente */
+}

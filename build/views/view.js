@@ -9,29 +9,14 @@ router.use(session.router);
 
 
 // Endpoint per la home
-router.get('/', (req, res) => {
-    res.sendFile(path.join(paths.PRIVATE_DIR, "index.html"));
-});
-
-// Endpoint per mostrare la pagina di Login
-router.get('/login', (req, res) => {
-    if (req.session.isAuthenticated) {
-        switch (req.session.classe) {
-            case 'admin':
-                return res.redirect('/dbdashboard');
-            case 'doc':
-                return res.redirect('/docdashboard');
-            default:
-                return res.redirect('/studentdashboard');
-        }
-    }
-    res.sendFile(path.join(paths.PRIVATE_DIR, "login.html"));
-});
+// router.get('/', (req, res) => {
+//     res.sendFile(path.join(paths.PRIVATE_DIR, "index.html"));
+// });
 
 // Endpoint per mostrare la pagina di registrazione
-router.get('/register', (req, res) => {
-    res.sendFile(path.join(paths.PRIVATE_DIR, "register.html"));
-});
+// router.get('/register', (req, res) => {
+//     res.sendFile(path.join(paths.PRIVATE_DIR, "register.html"));
+// });
 
 // Route per visualizzare l'app File Transfer
 router.get('/upload', common.checkAuth, (req, res) => {
@@ -40,7 +25,7 @@ router.get('/upload', common.checkAuth, (req, res) => {
 
 // Endpoint per mostrare la Dashboard Docente
 router.get('/docdashboard', common.checkAuth, (req, res) => {
-    if(req.session.classe ==='admin' || req.session.classe ==='admin')
+    if(req.session.user.Classe ==='admin' || req.session.user.Classe ==='doc')
         res.sendFile(path.join(paths.PRIVATE_DIR, "docdashboard.html"));
     else
         res.sendStatus(403);
@@ -49,7 +34,7 @@ router.get('/docdashboard', common.checkAuth, (req, res) => {
 // Endpoint per mostrare la dashboard del database
 router.get('/dbdashboard', common.checkAuth, (req, res) => {
     // Controllo se l'utente è un docente o admin
-    if (req.session.classe === 'admin') {
+    if (req.session.user.Classe === 'admin') {
         res.sendFile(path.join(paths.PRIVATE_DIR, "dbdashboard.html"));
     } else {
         res.sendStatus(403);

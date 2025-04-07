@@ -121,25 +121,45 @@ router.get('/view', common.checkAuth, (req, res) => {
 
     // Ottieni la struttura della cartella corrente
     const structure = getDirectoryStructure(currentDir);
-
-    // Prepara il contenuto HTML
-    let html = '<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title></title> <link rel="stylesheet" href="style.css" /></head>'
-    html += `<a href="/dbdashboard" font-size ="large"> 🏠 DBDashboard</a> <h1>Contenuto della Cartella</h1>  `;
     let parentDir = req.query.dir ? path.dirname(req.query.dir) : ''; // Indirizzo per tornare indietro
-
-    html += `<p><a href="?dir=${parentDir}"> <span font-size="large">↰</span> Torna alla cartella precedente</a></p>`;
-
-    html += '<ul>';
-    structure.forEach(item => {
-        if (item.type === 'directory') {
-            html += `<li><a href="?dir=${path.relative(baseDir, item.path)}">📂${item.name}/</a></li>`;
-        } else {
-            html += `<li><a href="${path.relative(baseDir, item.path)}" target="_blank">${item.name}</a></li>`;
-        }
-    });
-    html += '</ul>';
-
-    res.status(200).send(html);
+    // Prepara il contenuto HTML
+        let html = `
+        <!DOCTYPE html>
+        <html lang="it">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Explorer</title>
+            <link rel="stylesheet" href="/css/explorer_style.css" />
+        </head>
+        <body>
+            <header>
+                <a href="/dbdashboard" id="home-button">🏠</a>
+                <h1>Esplora risorse</h1>
+            </header>
+            <main>
+                <a href="?dir=${parentDir}" id="back-button">↰</a>
+                <span id="current-path">>D:/${path.relative(baseDir, currentDir)}</span>
+                <ul>
+        `;
+    
+        // Aggiungi i file e le cartelle alla lista
+        structure.forEach(item => {
+            if (item.type === 'directory') {
+                html += `<li><a href="?dir=${path.relative(baseDir, item.path)}">📂 ${item.name}/</a></li>`;
+            } else {
+                html += `<li><a href="${path.relative(baseDir, item.path)}" target="_blank">📄 ${item.name}</a></li>`;
+            }
+        });
+    
+        html += `
+                </ul>
+            </main>
+        </body>
+        </html>
+        `;
+    
+        res.status(200).send(html);
 });
 
 // Route protetta per il caricamento dei file

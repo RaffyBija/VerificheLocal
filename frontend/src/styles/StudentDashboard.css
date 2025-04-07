@@ -1,0 +1,74 @@
+
+/* Stile per il contenitore principale */
+.student-dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+/* Stile per la sezione delle informazioni utente */
+.user-info {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    width: 50%;
+    box-sizing: border-box;
+}
+
+.user-info h2 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.user-details p {
+    margin: 5px 0;
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Stile per la sezione delle azioni */
+.actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* Stile per i pulsanti della dashboard */
+.student-dashboard .action-button {
+    flex: 1;
+    padding: 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-align: center;
+}
+
+.student-dashboard .action-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.student-dashboard .action-button:active {
+    background-color: #003f7f;
+    transform: scale(1);
+}
+
+/* Stile per il messaggio di errore */
+.error {
+    color: red;
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 20px;
+}

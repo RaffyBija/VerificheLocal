@@ -1,0 +1,25 @@
+.logout-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.logout-button:hover {
+    transform: scale(1.05);
+}
+
+.logout-button:active {
+    transform: scale(1);
+}
+
+.logout-button svg {
+    margin-right: 5px; /* Spaziatura tra l'icona e il testo */
+}

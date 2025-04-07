@@ -91,10 +91,10 @@ router.post('/login', async (req, res) => {
         req.session.save(err => {
             if (err) {
                 console.error('Errore nel salvataggio della sessione: ', err);
-                return res.status(500).send('Errore interno del server');
+                return res.status(500).json({error:'Errore interno del server'});
             }
             const role = roles[req.session.user.Classe] || { message: "Accesso Riuscito!", redirectTo: "/studentdashboard" };
-            res.json({ success: true, ...role })
+            res.json({ success: true, ...role,user: {...userInfo} })
         });
     } catch (error) {
         console.error(error);
@@ -111,7 +111,7 @@ router.get('/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) {
             console.error(err);
-            return res.status(500).send('Error logging out');
+            return res.status(500).json({error:'Error logging out'});
         }
 
         //console.log('Logout effettuato con successo');
@@ -119,8 +119,8 @@ router.get('/logout', (req, res) => {
         // Pulisce il cookie della sessione
         res.clearCookie('connect.sid');
 
-        // Esegue il redirect alla pagina di login
-        res.redirect('/login');
+        //Invia una risposta di successo
+        res.status(200).json({ message: 'Logout effettuato con successo' });
     });
 });
 

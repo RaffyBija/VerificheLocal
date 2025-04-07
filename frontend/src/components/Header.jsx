@@ -1,29 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom'; // Importa useLocation
+import LogoutButton from './LogoutButton';
+import {AiOutlineHome} from 'react-icons/ai'; // Importa l'icona di home
 import '../styles/Header.css'; // Usa lo stile già definito
-import { fetchUsername,fetchUserClass } from '../utils/authUtils'; // Importa la funzione
-import { useEffect, useState } from 'react';
 
-const Header = ({ title}) => {
-
+const Header = ({ title, backgroundClass }) => {
     const [userClass, setUserClass] = useState('');
     const [userName, setUserName] = useState('');
-    const [error, setError] = useState('');
+    const location = useLocation(); // Ottieni il percorso corrente
 
     useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const userClass = await fetchUserClass();
-                const userName = await fetchUsername();
-                setUserClass(userClass);
-                setUserName(userName);
-            } catch (err) {
-                setError(err.message || 'Errore sconosciuto');
-            }
-        };
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            const user = JSON.parse(storedUser);
+            setUserClass(user.Classe);
+            setUserName(`${user.Nome} ${user.Cognome}`);
+        } 
+        else {
+            setUserClass('');
+            setUserName('');
+        }
+    }, []);
 
-        fetchUserData();
-    });
-    
     // Funzione per reindirizzare alla home page in base alla classe
     const redirectToHome = () => {
         switch (userClass) {
@@ -34,17 +32,27 @@ const Header = ({ title}) => {
             default:
                 return '/studentdashboard';
         }
-    }
+    };
+
+    // Determina se il pulsante "Home" deve essere nascosto
+    const isHomePage = location.pathname === '/studentdashboard' || location.pathname === '/docdashboard' || location.pathname === '/dbdashboard';
+
     return (
-        <header>
-            {error && <p className="error">{error}</p>}
-            {!error && (
-                <>
-                    <a id="home-button" href={redirectToHome()}>🏠</a>
-                    <h1>{title}</h1>
-                    <p id="username-display">{userName? userName : ''}</p>
-                </>
-            )}
+        <header className={`header ${backgroundClass}`}>
+            <div className="header-left">
+                {!isHomePage && (
+                    <a id="home-button" href={redirectToHome()}>
+                        <AiOutlineHome size={30} /> {/* Icona di home */}
+                    </a>
+                )}
+            </div>
+            <div className="header-center">
+                <h1>{title}</h1>
+            </div>
+            <div className="header-right">
+                <p id="username-display">{userName}</p>
+                <LogoutButton />
+            </div>
         </header>
     );
 };

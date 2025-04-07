@@ -92,6 +92,19 @@ ul li button {
     white-space: nowrap; /* Evita che il testo vada a capo */
 }
 
+/* Stili specifici per i pulsanti in Explorer */
+.explorer ul li button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 /* Effetto hover sui pulsanti */
 ul li button:hover {
     color: #4CAF50;

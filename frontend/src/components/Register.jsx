@@ -12,7 +12,7 @@ const Register = () => {
 
     useEffect(() => {
         document.title = 'Registrazione';
-    });
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -36,7 +36,7 @@ const Register = () => {
     };
 
     return (
-        <div className="centered-box">
+        <div className="centered-box container">
             <form onSubmit={handleSubmit}>
                 <h2>Registrazione</h2>
                 <input type="text" name="cognome" placeholder="Cognome" value={formData.cognome} onChange={handleChange} required /><br />

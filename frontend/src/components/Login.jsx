@@ -1,5 +1,5 @@
 import React, {useEffect } from 'react';
-import { checkSession,saveUsername,saveUserClass } from '../utils/authUtils'; // Funzione per verificare lo stato della sessione
+import { checkSession} from '../utils/authUtils'; // Funzione per verificare lo stato della sessione
 import '../styles/style.css'; // Importa il tuo file CSS per lo stile
 
 const Login = () => {
@@ -27,10 +27,10 @@ const Login = () => {
         };
 
         verifySession();
-    });
+    }, []);
     
     
-    const handleSubmit = async (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         const form = e.target;
         const formData = {
@@ -46,9 +46,9 @@ const Login = () => {
         });
         const result = await response.json();
         if (response.ok) {
-            // Salva l'username nei cookie
-            saveUsername(formData.username);
-            saveUserClass(formData.classe);
+            // Salva i dati dell'utente nella sessione
+            localStorage.setItem('user', JSON.stringify(result.user));
+            console.log(result);
             alert(result.message);
             window.location.href = result.redirectTo; // Reindirizza alla pagina specificata dal server
         } else {
@@ -57,8 +57,8 @@ const Login = () => {
     };
 
     return (
-        <div className="centered-box">
-            <form id="loginForm" onSubmit={handleSubmit}>
+        <div className="centered-box container">
+            <form id="loginForm" onSubmit={handleLogin}>
                 <h2>Login</h2>
                 <input
                     type="text"

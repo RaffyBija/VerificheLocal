@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useCallback } from 'react';
 
 import Header from './Header'; // Importa il componente Header
 import '../styles/Explorer.css';
-import { clearUsername } from '../utils/authUtils'; // Importa la funzione
 
 const ReviewExplorer = () => {
     const [files, setFiles] = useState([]);
@@ -10,23 +9,21 @@ const ReviewExplorer = () => {
     const [parentDir, setParentDir] = useState('');
     const [error, setError] = useState('');
 
+    const initializeExplorer = useCallback(async () => {
+        try {
+            // Logica per inizializzare l'explorer
+            await fetchFiles();
+        } catch (err) {
+            setError(err.message || 'Errore sconosciuto');
+        }
+    }, []);
+
+    // Funzione per gestire il caricamento dei file
     useEffect(() => {
         document.title = 'File Explorer';
         initializeExplorer();
-    });
+    }, [initializeExplorer]);
 
-    const initializeExplorer = async () => {
-        try {
-            // Carica i file solo se l'utente è autenticato
-            await fetchFiles();
-        } catch (err) {
-            if(err.message === 'Utente non autenticato') {
-                clearUsername();
-            }
-            // Gestisce errori di autenticazione o altri errori
-            setError(err.message || 'Errore sconosciuto');
-        }
-    };
 
     const fetchFiles = async (dir = '') => {
             const response = await fetch(`/api/get-personal-review-folder?dir=${dir}`);
@@ -62,7 +59,7 @@ const ReviewExplorer = () => {
 
     return (
         <>
-            <Header title="File Explorer"/>
+            <Header title="File Explorer" backgroundClass="explorer-header" />
             <main>
                 {error && (
                     <div className="error-container">

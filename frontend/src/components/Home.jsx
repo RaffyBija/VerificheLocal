@@ -8,7 +8,7 @@ const Home = () => {
     }, []);
 
     return (
-        <div id="container">
+        <div className="container">
             <h1>Benvenuto!</h1>
             <Link to="/login">Login</Link>
             <Link to="/register">Registrati</Link>

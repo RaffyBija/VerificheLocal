@@ -36,31 +36,10 @@ router.get('/api/get-userInfo', (req, res) => {
     }
 });
 
-router.get('/api/get-username', (req, res) => {
-    if (req.session.isAuthenticated) {
-        res.json({
-            username: req.session.user.username,
-        });
-    } else {
-        res.status(401).json({ error: 'Utente non autenticato' });
-    }
-});
-
-router.get('/api/get-user-class', (req, res) => {
-    if (req.session.isAuthenticated) {
-        res.json({
-            classe: req.session.user.Classe,
-        });
-    } else {
-        res.status(401).json({ error: 'Utente non autenticato' });
-    }
-});
-
 router.get('/api/isAuthenticated', (req, res) => {
     if (req.session.isAuthenticated) {
         res.json({
             isAuthenticated: true,
-            user: req.session.user,
         });
     } else {
         res.json({ isAuthenticated: false });

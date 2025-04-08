@@ -17,31 +17,32 @@ router.use(bodyParser.json());
 
 // Route per la registrazione o aggiunta di un nuovo utente
 router.post('/register', async (req, res) => {
-    const { cognome, nome, username, password, classe } = req.body;
-    if (!nome || !cognome || !username || !password || !classe) {
-        return res.status(400).json({ message: 'Tutti i campi sono obbligatori' });
+    const { Cognome, Nome, Username, Password, Classe } = req.body;
+    if (!Cognome || !Nome || !Username || !Password || !Classe) {
+        return res.status(400).send('Tutti i campi sono obbligatori');
     }
 
     try {
         // Verifica se l'utente esiste già
-        const existingUser = await db.findUser(username, classe);
+        const existingUser = await db.findUser(Username, Classe);
         if (existingUser) {
-            return res.status(409).json({ message: 'Username già in uso!' });
+            return res.status(409).send('Username già in uso!' );
         }
 
         // Crittografa la password
-        const encryptedPassword = common.encryptPassword(password);
+        const encryptedPassword = common.encryptPassword(Password);
 
         // Salva l'utente
-        const formattedNome = nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
-        const formattedCognome = cognome.charAt(0).toUpperCase() + cognome.slice(1).toLowerCase();
-        const formattedClasse = classe.replace(/\s+/g, '').toUpperCase();
-        await db.saveUser(formattedNome, formattedCognome, username.toLowerCase(), encryptedPassword, formattedClasse);
+        const formattedNome = Nome.charAt(0).toUpperCase() + Nome.slice(1).toLowerCase();
+        const formattedCognome = Cognome.charAt(0).toUpperCase() + Cognome.slice(1).toLowerCase();
+        const formattedClasse = Classe.replace(/\s+/g, '').toUpperCase();
+        await db.saveUser(formattedNome, formattedCognome, Username.toLowerCase(), encryptedPassword, formattedClasse);
 
         // Risposta diversa in base al contesto
         if (req.session && req.session.isAuthenticated) {
             // Richiesta da un utente autenticato (es. admin)
-            res.status(201).json({ message: 'Utente aggiunto con successo' });
+            const newUser = await db.findUser(Username, Classe);
+            res.status(201).json({ message: 'Utente aggiunto con successo', user: newUser });
         } else {
             // Richiesta da un utente non autenticato (es. registrazione pubblica)
             res.status(201).json({ message: 'Utente registrato con successo', redirectTo: '/login' });

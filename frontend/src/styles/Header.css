@@ -1,15 +1,18 @@
 /* Stile di base per l'header */
 .header {
+    position: fixed; /* Fissa l'header in alto */
+    top: 0;
+    left: 0;
+    width: 100%; /* Occupa tutta la larghezza */
+    height: 60px; /* Altezza dell'header */
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 10px 20px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
+    background-color: #007bff; /* Colore di sfondo */
+    color: white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+    z-index: 1000; /* Assicurati che sia sopra gli altri elementi */
     font-family: 'Roboto', Arial, sans-serif;
     box-sizing: border-box;
 }
@@ -106,24 +109,6 @@
     font-size: 1.2rem;
 }
 
-/* Stile per il pulsante di logout */
-.header-right .logout-button {
-    padding: 8px 12px;
-    font-size: 1rem;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.header-right .logout-button:hover {
-    transform: scale(1.05);
-}
-
-.header-right .logout-button:active {
-    transform: scale(1);
-}
 
 /* Responsività per schermi piccoli */
 @media (max-width: 768px) {

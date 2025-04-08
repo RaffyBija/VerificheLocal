@@ -1,25 +1,23 @@
-.logout-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 20px;
+
+/* Stile per il pulsante di logout */
+.header-right .logout-button {
+    padding: 8px 12px;
     font-size: 1rem;
-    font-weight: bold;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    background-color: transparent;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.logout-button:hover {
+.header-right .logout-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #000;
     transform: scale(1.05);
 }
 
-.logout-button:active {
+.header-right .logout-button:active {
+    background-color: rgba(255, 255, 255, 0.3);
     transform: scale(1);
-}
-
-.logout-button svg {
-    margin-right: 5px; /* Spaziatura tra l'icona e il testo */
 }

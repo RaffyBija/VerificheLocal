@@ -8,11 +8,13 @@ const Home = () => {
     }, []);
 
     return (
-        <div className="container">
-            <h1>Benvenuto!</h1>
-            <Link to="/login">Login</Link>
-            <Link to="/register">Registrati</Link>
-        </div> 
+        <div className='centered-box'>
+            <div className="container">
+                <h1>Benvenuto!</h1>
+                <Link to="/login">Login</Link>
+                <Link to="/register">Registrati</Link>
+            </div> 
+        </div>
     );
 };
 

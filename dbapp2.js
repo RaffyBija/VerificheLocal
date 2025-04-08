@@ -61,7 +61,7 @@ async function updateUser(user) {
     try {
         await pool.execute(`UPDATE Alunni 
                    SET Cognome = ?, Nome = ?, Classe = ?, Username = ?, Password = ? 
-                   WHERE id = ?`, [user.cognome, user.nome, user.classe, user.username, user.password, user.ID]);
+                   WHERE id = ?`, [user.Cognome, user.Nome, user.Classe, user.Username, user.Password, user.ID]);
     } catch (err) {
         console.error('Errore: ', err);
         throw err;
@@ -93,6 +93,9 @@ async function deleteUser(id) {
 
 //Funzione per ottenere una password
 async function findPassword(id) {
+    if (!id) {
+        throw new Error("ID non fornito");
+    }
     try {
         const [password] = await pool.execute('SELECT Password FROM Alunni WHERE ID = ?', [id]);
         return password.length > 0 ? password[0] : null;

@@ -40,6 +40,7 @@ router.get('/api/isAuthenticated', (req, res) => {
     if (req.session.isAuthenticated) {
         res.json({
             isAuthenticated: true,
+            userType: req.session.user.Classe
         });
     } else {
         res.json({ isAuthenticated: false });

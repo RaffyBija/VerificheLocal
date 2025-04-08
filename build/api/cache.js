@@ -9,7 +9,7 @@ let cacheTest = {
 let sessionCache = [];
 
 function containsObject(arr, obj) {
-    return arr.some(existingObj => parseInt(existingObj.userID) === parseInt(obj.userID));
+    return arr.some(existingObj => parseInt(existingObj.user.ID) === parseInt(obj.user.ID));
 }
 
 function addSession(session) {

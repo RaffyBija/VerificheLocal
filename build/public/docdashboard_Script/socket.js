@@ -49,8 +49,8 @@ function liveInfo(){
             const quizCompleted = row.quizCompleted ? "TERMINATO" : "IN CORSO";
             tbody.append(`
                 <tr>
-                    <td>${row.userSurname}</td>
-                    <td>${row.user}</td>
+                    <td>${row.user.Cognome}</td>
+                    <td>${row.user.Nome}</td>
                     <td>${quizCompleted}</td>
                 </tr>
             `);

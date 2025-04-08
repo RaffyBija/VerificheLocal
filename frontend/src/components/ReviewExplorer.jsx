@@ -1,5 +1,5 @@
 import React, { useState, useEffect,useCallback } from 'react';
-
+import ErrorPage from './ErrorPage';
 import Header from './Header'; // Importa il componente Header
 import '../styles/Explorer.css';
 
@@ -60,10 +60,10 @@ const ReviewExplorer = () => {
     return (
         <>
             <Header title="File Explorer" backgroundClass="explorer-header" />
-            <main>
+            <main className='explorer'>
                 {error && (
-                    <div className="error-container">
-                        <p style={{ color: 'red' }}>{error}</p>
+                    <div className="centered-box">
+                        <ErrorPage code="404" message={error} gifUrl="/gifs/404.gif" redirectTo="/" />
                     </div>
                 )}
                 {!error && (

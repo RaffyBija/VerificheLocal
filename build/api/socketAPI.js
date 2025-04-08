@@ -30,12 +30,12 @@ module.exports = (io, sessionMiddleware) => {
         function giveTest() {
             const sessionCache = getSessionCache();
             const cacheTest = getCacheTest();
-            const foundObj = sessionCache.find(existingObj => parseInt(existingObj.userID) === parseInt(session.userID));
+            const foundObj = sessionCache.find(existingObj => parseInt(existingObj.user.ID) === parseInt(session.user.ID));
             if (foundObj && !foundObj.quizCompleted) {
-                if (cacheTest.quizInfo.classeDestinataria && session.classe && cacheTest.quizInfo.classeDestinataria === session.classe) {
+                if (cacheTest.quizInfo.classeDestinataria && session.user.Classe && cacheTest.quizInfo.classeDestinataria === session.user.Classe) {
                     socket.emit("testReceived", cacheTest.quizData, cacheTest.quizInfo.title);
                 } else {
-                    if (session.userSurname && session.user && session.classe) console.log(session.surname, session.name, session.classe, "accessDenied", "You do not have access to this quiz.");
+                    if (session.user.Cognome && session.user.Nome && session.user.Classe) console.log(session.surname, session.name, session.classe, "accessDenied", "You do not have access to this quiz.");
                 }
             }
         }
@@ -69,7 +69,7 @@ module.exports = (io, sessionMiddleware) => {
 
         socket.on("enterInSession", () => {
             const cacheTest = getCacheTest();
-            if (cacheTest.quizInfo.started && cacheTest.quizInfo.classeDestinataria === session.classe) {
+            if (cacheTest.quizInfo.started && cacheTest.quizInfo.classeDestinataria === session.user.Classe) {
                 if (!containsObject(getSessionCache(), session) && session.isAuthenticated) {
                     addSession(session);
                 }
@@ -80,7 +80,7 @@ module.exports = (io, sessionMiddleware) => {
 
         socket.on("quizCompleted", () => {
             const sessionCache = getSessionCache();
-            const foundObj = sessionCache.find(existingObj => parseInt(existingObj.userID) === parseInt(session.userID));
+            const foundObj = sessionCache.find(existingObj => parseInt(existingObj.user.ID) === parseInt(session.user.ID));
             if (foundObj) {
                 foundObj.quizCompleted = true;
             }

@@ -11,14 +11,18 @@ html,body {
 }
 
 .content {
+    width: 100%;
+    height: 100%;
+}
+
+.centered-box{
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
 }
 
-
-.centered-box{
+.container{
     text-align: center;
     width: 300px;
     margin: 0 auto;

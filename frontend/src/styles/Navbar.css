@@ -1,0 +1,36 @@
+/* Stile per la navbar */
+/* Navbar fissa tra header e footer */
+.navbar {
+    width: 200px; /* Larghezza della navbar */
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Aggiungi uno scroll se il contenuto supera l'altezza */
+}
+
+/* Lista dei link */
+.navbar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Stile per ogni link */
+.navbar ul li {
+    margin: 0;
+}
+
+.navbar ul li a {
+    display: block;
+    padding: 10px 20px;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.navbar ul li a:hover {
+    background-color: #575757; /* Colore di sfondo al passaggio del mouse */
+}

@@ -1,0 +1,35 @@
+/* Contenitore delle azioni */
+.record-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* Pulsanti di azione */
+.record-actions button {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Pulsante di modifica */
+.record-actions button:first-child {
+    background-color: #ffc107; /* Giallo */
+}
+
+.record-actions button:first-child:hover {
+    background-color: #e0a800;
+}
+
+/* Pulsante di eliminazione */
+.record-actions button:last-child {
+    background-color: #dc3545; /* Rosso */
+}
+
+.record-actions button:last-child:hover {
+    background-color: #c82333;
+}

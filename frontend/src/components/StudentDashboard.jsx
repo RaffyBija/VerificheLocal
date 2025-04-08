@@ -28,6 +28,7 @@ const StudentDashboard = () => {
     return (
         <>
             <Header title="Dashboard Studente" backgroundClass="dashboard-header" />
+            <div className='centered-box'>
             <main className="student-dashboard">
                 {error && <p className="error">{error}</p>}
                 {!error && (
@@ -57,6 +58,7 @@ const StudentDashboard = () => {
                     </>
                 )}
             </main>
+            </div>
         </>
     );
 };

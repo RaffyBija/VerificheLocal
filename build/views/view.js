@@ -31,31 +31,31 @@ router.get('/docdashboard', common.checkAuth, (req, res) => {
         res.sendStatus(403);
 });
 
-// Endpoint per mostrare la dashboard del database
-router.get('/dbdashboard', common.checkAuth, (req, res) => {
-    // Controllo se l'utente è un docente o admin
-    if (req.session.user.Classe === 'admin') {
-        res.sendFile(path.join(paths.PRIVATE_DIR, "dbdashboard.html"));
-    } else {
-        res.sendStatus(403);
-    }
-});
+// // Endpoint per mostrare la dashboard del database
+// router.get('/dbdashboard', common.checkAuth, (req, res) => {
+//     // Controllo se l'utente è un docente o admin
+//     if (req.session.user.Classe === 'admin') {
+//         res.sendFile(path.join(paths.PRIVATE_DIR, "dbdashboard.html"));
+//     } else {
+//         res.sendStatus(403);
+//     }
+// });
 
-// Endpoint per mostrare la dashboard dello studente
-router.get('/studentdashboard', common.checkAuth, (req, res) => {
-    res.sendFile(path.join(paths.PRIVATE_DIR, "studentedashboard.html"));
-}
-);
+// // Endpoint per mostrare la dashboard dello studente
+// router.get('/studentdashboard', common.checkAuth, (req, res) => {
+//     res.sendFile(path.join(paths.PRIVATE_DIR, "studentedashboard.html"));
+// }
+// );
 
 // Endpoint per mostrare la Verifica allo Studente
 router.get('/verificastudente', common.checkAuth, (req, res) => {
     res.sendFile(path.join(paths.PRIVATE_DIR, "studente_verifica.html"));
 });
 
-// Endpoint per mostrare la pagina di correzione
-router.get('/getCorrezione', common.checkAuth, (req, res) => {
-    res.sendFile(path.join(paths.PRIVATE_DIR, "vista_risultati.html"));
-}
-);
+// // Endpoint per mostrare la pagina di correzione
+// router.get('/getCorrezione', common.checkAuth, (req, res) => {
+//     res.sendFile(path.join(paths.PRIVATE_DIR, "vista_risultati.html"));
+// }
+// );
 
 module.exports = router;

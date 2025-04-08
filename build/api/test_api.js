@@ -38,7 +38,7 @@ router.get('/quiz', (req, res) => {
 
 // Route per salvare la verifica generata dal docente
 router.post('/save-page', (req, res) => {
-    if (req.session.classe !== 'doc' && req.session.classe !== 'admin') {
+    if (req.session.user.Classe !== 'doc' && req.session.user.Classe !== 'admin') {
         return res.status(403).send('Accesso negato');
     }
 
@@ -57,7 +57,7 @@ router.post('/save-page', (req, res) => {
 
 // Route per salvare un quiz generato dal docente
 router.post('/save-quiz', (req, res) => {
-    if (req.session.classe !== 'doc' && req.session.classe !== 'admin') {
+    if (req.session.user.Classe !== 'doc' && req.session.user.Classe !== 'admin') {
         return res.status(403).send('Accesso negato');
     }
 
@@ -70,7 +70,7 @@ router.post('/save-quiz', (req, res) => {
     fs.writeFile(filePath, csvContent, (err) => {
         if (err) {
             console.error('Errore durante il salvataggio del quiz:', err);
-            return res.status(500).send('Errore durante il salvataggio del quiz');
+            return res.status(500).json({error:'Errore durante il salvataggio del quiz'});
         }
         res.status(200).json({ message: 'Quiz salvato con successo' });
     });
@@ -78,7 +78,7 @@ router.post('/save-quiz', (req, res) => {
 
 // Endpoint per inviare una verifica esistente
 router.post('/test/send', (req, res) => {
-    if (req.session.classe !== 'doc' && req.session.classe !== 'admin') {
+    if (req.session.user.Classe !== 'doc' && req.session.user.Classe !== 'admin') {
         return res.status(403).json({ message: 'Accesso negato' });
     }
 

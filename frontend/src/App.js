@@ -8,15 +8,19 @@ import ReviewExplorer from "./components/ReviewExplorer";
 import StudentDashboard from "./components/StudentDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { checkSession } from "./utils/authUtils"; // Importa la funzione di controllo autenticazione
-
+import DBDashboard from "./components/DBPage/DBDashboard";
 const ErrorWrapper = () => {
   const { code } = useParams();
   const [searchParams] = useSearchParams();
   const errorMap = {
     '401': {
-      message: 'Accesso non autorizzato',
+      message: 'Utente non autenticato',
       gifUrl: '/gifs/401.gif',
       redirectTo: '/login'
+    },
+    '403': {
+      message: 'Accesso vietato',
+      gifUrl: '/gifs/403.gif',
     },
     '404': {
       message: 'Pagina non trovata',
@@ -41,12 +45,14 @@ const ErrorWrapper = () => {
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userType, setUserType] = useState(""); // Stato per gestire il tipo di utente
   const [loading, setLoading] = useState(true); // Stato per gestire il caricamento
 
   useEffect(() => {
     const verifySession = async () => {
       const result = await checkSession();
       setIsAuthenticated(result.isAuthenticated);
+      setUserType(result.userType); // Imposta il tipo di utente
       setLoading(false); // Fine del caricamento
     };
 
@@ -82,6 +88,15 @@ const App = () => {
           }
         />
         <Route path="*" element={<ErrorPage code="404" message="Pagina non trovata" gifUrl="/gifs/404.gif" />} />
+        <Route path="/dbdashboard" element={
+          <ProtectedRoute 
+            isAuthenticated={isAuthenticated} 
+            userType={userType} 
+            requiredRole="admin"
+          >
+            <DBDashboard />
+          </ProtectedRoute>
+        } />
         {/* Altre route qui */}
       </Routes>
     </Router>

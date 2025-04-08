@@ -15,8 +15,8 @@ const ErrorPage = ({code, message, gifUrl, redirectTo}) =>{
     return(
         <div className="error-container">
             <h1>{code}</h1>
-            <p>{message}</p>
             <img src={gifUrl} alt={`Error ${code}`} />
+            <p>{message}</p>
             {code === '401' && redirectTo && (
                 <p>Verrai reindirizzato alla pagina di login...</p>
             )}

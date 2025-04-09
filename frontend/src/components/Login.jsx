@@ -1,27 +1,28 @@
 import React, { useEffect } from 'react';
 import '../styles/style.css'; // Importa il tuo file CSS per lo stile
+import { checkSession } from '../utils/authUtils'; // Importa la funzione di controllo autenticazione
 
 const Login = () => {
-    // Controlla lo stato della sessione all'inizio
     useEffect(() => {
-        document.title = 'Login';
-
-        // Verifica lo stato della sessione dal localStorage
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (user && user.isAuthenticated) {
-            // Reindirizza alla pagina appropriata in base al tipo di utente
-            switch (user.Classe) {
-                case 'admin':
-                    window.location.href = '/dbdashboard';
-                    break;
-                case 'doc':
-                    window.location.href = '/docdashboard';
-                    break;
-                default:
-                    window.location.href = '/studentdashboard';
-                    break;
+        const verifySession = async () => {
+            const session = await checkSession();
+            if (session.isAuthenticated) {
+                const user = JSON.parse(localStorage.getItem('user'));
+                switch (user.Classe) {
+                    case 'admin':
+                        window.location.href = '/dbdashboard';
+                        break;
+                    case 'doc':
+                        window.location.href = '/docdashboard';
+                        break;
+                    default:
+                        window.location.href = '/studentdashboard';
+                        break;
+                }
             }
-        }
+        };
+
+        verifySession();
     }, []);
 
     const handleLogin = async (e) => {
@@ -30,31 +31,20 @@ const Login = () => {
         const formData = {
             username: form.username.value,
             password: form.password.value,
-            classe: form.classe.value,
+            classe: form.classe.value
         };
 
-        // Invia i dati al server
         const response = await fetch('/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData),
         });
+
         const result = await response.json();
 
         if (response.ok) {
-            // Salva i dati dell'utente nella sessione (localStorage)
-            localStorage.setItem(
-                'user',
-                JSON.stringify({
-                    isAuthenticated: true,
-                    Classe: result.user.Classe,
-                    Nome: result.user.Nome,
-                    Cognome: result.user.Cognome,
-                })
-            );
-            console.log(result);
-            alert(result.message);
-            window.location.href = result.redirectTo; // Reindirizza alla pagina specificata dal server
+            localStorage.setItem('user', JSON.stringify(result.user));
+            window.location.href = result.redirectTo;
         } else {
             alert(result.message);
         }
@@ -78,13 +68,12 @@ const Login = () => {
                         placeholder="Password"
                         required
                     />
-                    <br />
                     <input
-                        type="text"
-                        name="classe"
-                        placeholder="Classe (es. Classe1A)"
-                        style={{ textTransform: 'uppercase' }}
-                        required
+                    type="text"
+                    name="classe"
+                    placeholder="Classe (es. Classe1A)"
+                    style={{ textTransform: 'uppercase' }}
+                    required
                     />
                     <br />
                     <button type="submit">Accedi</button>

@@ -154,15 +154,15 @@ router.post("/getResult", (req, res) => {
     const doc = new PDFDocument();
     const today = new Date();
     const dateString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
-    const dirPath = path.join(paths.CORRECTIONS_DIR, `${dateString}_${verifica.title}_${req.session.classe}`);
+    const dirPath = path.join(paths.CORRECTIONS_DIR, `${dateString}_${verifica.title}_${req.session.user.Classe}`);
 
     ensureDirectoryExists(dirPath);
 
-    const pdfFilePath = path.join(dirPath, `${(req.session.userSurname).replace(/[^a-z0-9]/gi, '_') || ""}_${req.session.user}_results.pdf`);
+    const pdfFilePath = path.join(dirPath, `${(req.session.user.Cognome).replace(/[^a-z0-9]/gi, '_') || ""}_${req.session.user.Nome}_results.pdf`);
     const writeStream = fs.createWriteStream(pdfFilePath);
 
     doc.pipe(writeStream);
-    doc.fontSize(10).text(`Alunno: ${req.session.userSurname} ${req.session.user}  Classe: ${req.session.classe}`, { align: 'right', oblique: true });
+    doc.fontSize(10).text(`Alunno: ${req.session.user.Cognome} ${req.session.user.Nome}  Classe: ${req.session.user.Classe}`, { align: 'right', oblique: true });
     doc.moveDown();
     doc.fontSize(16).text('Risultati del Quiz ' + verifica.title, { align: 'center' });
     doc.moveDown();
@@ -180,7 +180,7 @@ router.post("/getResult", (req, res) => {
 
 // Endpoint per ottenere un file zip contenente i risultati della verifica svolta
 router.get('/download-results', (req, res) => {
-    if (!req.session || !req.session.classe) {
+    if (!req.session || !req.session.user.Classe) {
         return res.status(400).send('Classe non specificata nella sessione');
     }
 

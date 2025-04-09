@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import '../../styles/Toolbar.css';
-import EditUserModal from './UserModal';
+import UserModal from './UserModal';
 
-const Toolbar = ({ setData, classes, originalData }) => {
+const Toolbar = ({ setData,setOriginalData, classes, originalData, setMessage, setMessageType }) => {
     const [selectedClass, setSelectedClass] = useState('');
     const [searchValue, setSearchValue] = useState('');
     const [hideOffline, setHideOffline] = useState(false);
@@ -57,7 +57,16 @@ const Toolbar = ({ setData, classes, originalData }) => {
     };
 
     const handleSave = (newUser) => {
-        setData((prevData) => [...prevData, newUser]); // Aggiungi il nuovo utente ai dati esistenti
+        try {
+            setData((prevData) => [...prevData, newUser]); // Aggiungi il nuovo utente ai dati esistenti
+            setOriginalData((prevData) => [...prevData, newUser]); // Aggiungi il nuovo utente ai dati originali
+            setMessage('Utente aggiunto con successo!');
+            setMessageType('success');
+        } catch (error) {
+            console.error('Errore durante l\'aggiunta del nuovo utente:', error);
+            setMessage('Errore durante l\'aggiunta del nuovo utente.');
+            setMessageType('error');
+        }
     };
 
     return (
@@ -90,7 +99,7 @@ const Toolbar = ({ setData, classes, originalData }) => {
             <button onClick={handleAddUserClick}>Aggiungi Utente</button>
 
             {isModalOpen && (
-                <EditUserModal
+                <UserModal
                     user={null} // Passa null per indicare che stiamo aggiungendo un nuovo utente
                     onClose={() => setIsModalOpen(false)}
                     onSave={handleSave}

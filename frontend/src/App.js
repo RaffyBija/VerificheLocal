@@ -9,6 +9,8 @@ import StudentDashboard from "./components/StudentDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { checkSession } from "./utils/authUtils"; // Importa la funzione di controllo autenticazione
 import DBDashboard from "./components/DBPage/DBDashboard";
+import Loading from "./components/Loading";
+
 const ErrorWrapper = () => {
   const { code } = useParams();
   const [searchParams] = useSearchParams();
@@ -45,23 +47,30 @@ const ErrorWrapper = () => {
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userType, setUserType] = useState(""); // Stato per gestire il tipo di utente
+  const [userType, setUserType] = useState(null); // Stato per gestire il tipo di utente
   const [loading, setLoading] = useState(true); // Stato per gestire il caricamento
 
   useEffect(() => {
     const verifySession = async () => {
       const result = await checkSession();
       setIsAuthenticated(result.isAuthenticated);
-      setUserType(result.userType); // Imposta il tipo di utente
+      setUserType(result.userType || null); // Imposta il tipo di utente
       setLoading(false); // Fine del caricamento
     };
 
     verifySession();
+
+    // Controlla periodicamente lo stato della sessione ogni 5 minuti
+    const interval = setInterval(verifySession, 5 * 60 * 1000);
+
+    return () => clearInterval(interval); // Pulisci l'intervallo quando il componente viene smontato
   }, []);
 
   if (loading) {
     // Mostra un indicatore di caricamento mentre si verifica la sessione
-    return <div>Loading...</div>;
+    return (<>
+      <Loading />
+      </>)
   }
 
   return (

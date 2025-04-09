@@ -5,6 +5,9 @@ const common = require('../midw/common');
 const sessionManager = require('../midw/sessionManager');
 // Endpoint per restituire l'intero Database
 app.post('/data', common.checkAuth, async (req, res) => {
+    if(req.session.user.Classe !== 'admin') {
+        return res.status(403).send("Accesso negato. Solo gli amministratori possono accedere a questi dati.");
+    }
     try {
         const inSessions = sessionManager.getSessions();
         const users = await db.showUser();
@@ -32,7 +35,6 @@ app.put('/update', async (req, res) => {
         return res.status(403).send("Accesso negato. Solo gli amministratori possono aggiornare i record.");
     }
     const user = req.body;
-    console.log("User: ", user);
     try {
         const result = await db.findPassword(user.ID);
         const encryptedPassword = common.encryptPassword(user.Password);
@@ -49,6 +51,9 @@ app.put('/update', async (req, res) => {
 
 // Endpoint per ottenere Dati Specifici dal database
 app.get('/data/:id', common.checkAuth, async (req, res) => {
+    if(req.session.user.Classe !== 'admin') {
+        return res.status(403).send("Accesso negato. Solo gli amministratori possono accedere a questi dati.");
+    }
     const { id } = req.params;
 
     try {
@@ -82,6 +87,9 @@ app.delete('/delete/:id', async (req, res) => {
 
 // Endpoint per recuperare una password
 app.get('/password/:id', common.checkAuth, async (req, res) => {
+    if(req.session.user.Classe !== 'admin') {
+        return res.status(403).send("Accesso negato. Solo gli amministratori possono recuperare le password.");
+    }
     const { id } = req.params;
     const data = await db.findPassword(id);
     const decryptedPassword = common.decryptPassword(data.Password);

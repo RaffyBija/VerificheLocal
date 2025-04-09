@@ -32,35 +32,35 @@ const createMulterStorage = (destinationPath, filenameGenerator) => {
 // Configurazione per il caricamento dei file utente
 const userFileStorage = createMulterStorage(
     (req) => {
-        const userClass = req.session.classe || "Nobody";
-        const userSurname = req.session.userSurname || "Surname";
-        const userName = req.session.user || "Name";
+        const userClass = req.session.user.Classe || "Nobody";
+        const userSurname = req.session.user.Cognome || "Surname";
+        const userName = req.session.user.Nome || "Name";
         return paths.UPLOADS_DIR + `/${userClass}/${userSurname}_${userName}`;
     },
     (req, file) => {
         const extension = path.extname(file.originalname);
         const currentDate = new Date().toISOString().replace(/T/, '_').replace(/:/g, '-').split('.')[0];
-        return `${currentDate}_${req.session.userSurname}_${req.session.user}${extension}`.replace(/\s+/g, '');
+        return `${currentDate}_${req.session.user.Cognome}_${req.session.user.Nome}${extension}`.replace(/\s+/g, '');
     }
 );
 
 // Configurazione per la consegna di allegati ad una verifica
 const fileVerificaStorage = createMulterStorage(
     (req) => {
-        const userClass = req.session.classe || "Nobody";
-        const userSurname = req.session.userSurname || "Surname";
-        const userName = req.session.user || "Name";
+        const userClass = req.session.user.Classe || "Nobody";
+        const userSurname = req.session.user.Cognome || "Surname";
+        const userName = req.session.user.Nome || "Name";
         const today = new Date();
         const dateString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
         const testTitle = getVerifica();
 
-        const baseUploadPath = path.join(paths.VERIFICHE_DIR, 'risultati', `${dateString}_${testTitle}_${req.session.classe}`);
+        const baseUploadPath = path.join(paths.VERIFICHE_DIR, 'risultati', `${dateString}_${testTitle}_${req.session.user.Classe}`);
         return path.join(baseUploadPath, userClass, `${userSurname}_${userName}`);
     },
     (req, file) => {
         const extension = path.extname(file.originalname);
         const currentDate = new Date().toISOString().replace(/T/, '_').replace(/:/g, '-').split('.')[0];
-        return `${currentDate}_${req.session.userSurname}_${req.session.user}${extension}`.replace(/\s+/g, '');
+        return `${currentDate}_${req.session.user.Cognome}_${req.session.user.Nome}${extension}`.replace(/\s+/g, '');
     }
 );
 
@@ -108,7 +108,7 @@ const uploadAttachments = multer({ storage: attachmentsStorage });
 
 // Endpoint per inviare la pagina viewupload
 router.get('/view', common.checkAuth, (req, res) => {
-    if(req.session.classe!== 'admin')
+    if(req.session.user.Classe!== 'admin')
         return res.sendStatus(403);
     
     const baseDir = paths.STORAGE_DIR;
@@ -173,7 +173,7 @@ router.post('/upload', common.checkAuth, upload.single('file'), (req, res) => {
 // Route per importare gli allegati per una verifica
 router.post('/api/import-attachments', common.checkAuth, uploadAttachments.array('attachments', 10), (req, res) => {
     try {
-        if (req.session.classe !== 'doc' && req.session.classe !== 'admin') {
+        if (req.session.user.Classe !== 'doc' && req.session.user.Classe !== 'admin') {
             return res.status(403).json({ success: false, message: 'Accesso negato' });
         }
 
@@ -238,7 +238,7 @@ router.post('/delete-tempdir', (req, res) => {
 
 //Route protetta per importare quiz (file.csv)
 router.post('/api/import-csv',common.checkAuth,uploadCsv.single('file'), (req,res)=>{
-    if (req.session.classe !== 'doc' && req.session.classe !== 'admin') {
+    if (req.session.user.Classe !== 'doc' && req.session.user.Classe !== 'admin') {
         return res.status(403).json({message: 'Accesso negato'});
     }
 
@@ -253,7 +253,7 @@ router.get('/api/list-attachments', common.checkAuth, (req, res) => {
     const today = new Date();
     const dateString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
     const testTitle = getVerifica();
-    const relativDir = `tempAttachments_${dateString}_${testTitle}_${req.session.classe}`;
+    const relativDir = `tempAttachments_${dateString}_${testTitle}_${req.session.user.Classe}`;
     const baseDir = path.join(paths.VERIFICHE_DIR, relativDir);
 
     if (!fs.existsSync(baseDir)) {

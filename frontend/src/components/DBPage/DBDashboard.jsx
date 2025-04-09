@@ -4,6 +4,7 @@ import Navbar from './Navbar';
 import Toolbar from './Toolbar';
 import DataTable from './DataTable';
 import EditUserModal from './UserModal';
+import Loading from '../Loading';
 import '../../styles/DBDashboard.css';
 
 const DBDashboard = () => {
@@ -118,11 +119,16 @@ const DBDashboard = () => {
                     )}
                     <Toolbar
                         setData={setData}
+                        setOriginalData={setOriginalData}
                         classes={classes}
                         originalData={originalData}
+                        setMessage={setMessage}
+                        setMessageType={setMessageType}
                     />
                     {loading ? (
-                        <p>Caricamento...</p>
+                        <>
+                            <Loading />
+                        </>
                     ) : (
                         <DataTable
                             data={data}

@@ -1,23 +1,26 @@
 
 /* Stile per il pulsante di logout */
 .header-right .logout-button {
-    padding: 8px 12px;
+    padding: 4px 2px;
     font-size: 1rem;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     background-color: transparent;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: transform 0.2s ease;
+}
+
+.header-right .logout-button svg {
+    vertical-align: middle;
+    margin-right: 5px;
 }
 
 .header-right .logout-button:hover {
-    background-color: rgba(255, 255, 255, 0.2);
     color: #000;
     transform: scale(1.05);
 }
 
 .header-right .logout-button:active {
-    background-color: rgba(255, 255, 255, 0.3);
     transform: scale(1);
 }

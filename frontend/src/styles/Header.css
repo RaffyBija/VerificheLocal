@@ -104,12 +104,6 @@
     flex-shrink: 0;
 }
 
-.header-right #username-display::before {
-    content: '👤';
-    font-size: 1.2rem;
-}
-
-
 /* Responsività per schermi piccoli */
 @media (max-width: 768px) {
     .header-center h1 {

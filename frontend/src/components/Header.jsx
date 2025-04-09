@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom'; // Importa useLocation
 import LogoutButton from './LogoutButton';
 import {AiOutlineHome} from 'react-icons/ai'; // Importa l'icona di home
+import { FaRegUserCircle } from "react-icons/fa";
 import '../styles/Header.css'; // Usa lo stile già definito
 
 const Header = ({ title, backgroundClass }) => {
@@ -50,8 +51,11 @@ const Header = ({ title, backgroundClass }) => {
                 <h1>{title}</h1>
             </div>
             <div className="header-right">
-                <p id="username-display">{userName}</p>
-                <LogoutButton />
+                <div id="username-display">
+                    <FaRegUserCircle size={20} /> {/* Icona dell'utente */}
+                    {userName}
+                    <LogoutButton />
+                </div>
             </div>
         </header>
     );

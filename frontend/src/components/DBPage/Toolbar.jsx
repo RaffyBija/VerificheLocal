@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import '../../styles/Toolbar.css';
+import { IoMdAddCircle } from "react-icons/io";
 import UserModal from './UserModal';
+import '../../styles/Toolbar.css';
 
 const Toolbar = ({ setData,setOriginalData, classes, originalData, setMessage, setMessageType }) => {
     const [selectedClass, setSelectedClass] = useState('');
@@ -96,7 +97,10 @@ const Toolbar = ({ setData,setOriginalData, classes, originalData, setMessage, s
                 onChange={handleSearch}
             />
 
-            <button onClick={handleAddUserClick}>Aggiungi Utente</button>
+            <button onClick={handleAddUserClick}>
+                <IoMdAddCircle />
+                Aggiungi Utente
+                </button>
 
             {isModalOpen && (
                 <UserModal

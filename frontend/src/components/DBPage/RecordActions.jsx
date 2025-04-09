@@ -1,4 +1,6 @@
 import React from 'react';
+import { FaEdit } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
 import '../../styles/RecordActions.css'; // Importa il tuo file CSS per lo stile
 
 const RecordActions = ({ row, handleDelete, onEdit }) => {
@@ -17,8 +19,12 @@ const RecordActions = ({ row, handleDelete, onEdit }) => {
 
     return (
         <div className="record-actions">
-            <button onClick={handleEdit}>✏️</button>
-            <button onClick={handleDeleteClick}>🗑️</button>
+            <button onClick={handleEdit}>
+                <FaEdit />
+            </button>
+            <button onClick={handleDeleteClick}>
+                <MdDeleteForever />
+            </button>
         </div>
     );
 };

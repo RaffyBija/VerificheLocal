@@ -10,6 +10,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { checkSession } from "./utils/authUtils"; // Importa la funzione di controllo autenticazione
 import DBDashboard from "./components/DBPage/DBDashboard";
 import Loading from "./components/Loading";
+import TEST from "./components/TESTNAVBAR";
 
 const ErrorWrapper = () => {
   const { code } = useParams();
@@ -106,6 +107,10 @@ const App = () => {
             <DBDashboard />
           </ProtectedRoute>
         } />
+        <Route path="/test" element={
+            <TEST />
+        } />
+        {/* Aggiungi altre route qui */}
         {/* Altre route qui */}
       </Routes>
     </Router>

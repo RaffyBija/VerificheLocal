@@ -9,21 +9,54 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto; /* Aggiungi uno scroll se il contenuto supera l'altezza */
+    user-select: none;
+}
+.navbar .section{
+
 }
 
-/* Lista dei link */
-.navbar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.navbar .section-label{
+    margin-top: 20px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #bdc3c7;
+    transition: color 0.3s ease;
+    cursor: pointer;
+    display: inline-block;
 }
 
-/* Stile per ogni link */
-.navbar ul li {
-    margin: 0;
+.navbar .section-label svg{
+    margin-left: 3px;
+    margin-right: 5px;
+    vertical-align: middle;
+    fill: currentColor;
+    width: 18px;
+    height: 18px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+/* Contenuto della sezione */
+.navbar .section-content {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
 }
 
-.navbar ul li a {
+.navbar .section-content.open {
+    max-height: 200px; /* Altezza massima per il contenuto visibile */
+    opacity: 1;
+}
+
+.navbar .section-content.closed {
+    max-height: 0;
+    opacity: 0;
+}
+
+.navbar a {
     display: block;
     padding: 10px 20px;
     color: white;
@@ -31,6 +64,6 @@
     transition: background-color 0.3s ease;
 }
 
-.navbar ul li a:hover {
+.navbar a:hover {
     background-color: #575757; /* Colore di sfondo al passaggio del mouse */
 }

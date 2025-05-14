@@ -68,6 +68,12 @@ module.exports = (io, sessionMiddleware) => {
         socket.emit('sendSessionCache', getSessionCache());
 
         socket.on("enterInSession", () => {
+            if(!session.user || !session.user.ID) {
+                console.error("Session user or ID is not defined");
+                //socket.emit("error", { message: "Session user or ID is not defined" });
+                return;
+            }
+        
             const cacheTest = getCacheTest();
             if (cacheTest.quizInfo.started && cacheTest.quizInfo.classeDestinataria === session.user.Classe) {
                 if (!containsObject(getSessionCache(), session) && session.isAuthenticated) {

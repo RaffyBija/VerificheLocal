@@ -1,6 +1,9 @@
 // main.js
 
 $(document).ready(() => {
+
+    
+
     // Carica i file esterni test.js e quiz.js
     $.getScript("/docdashboard_Script/test.js", function() {
         console.log("test.js è stato caricato correttamente.");
